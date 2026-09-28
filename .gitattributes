@@ -1,0 +1,4 @@
+# File landing là BẤT BIẾN và được kiểm bằng sha256 trong _manifest.json.
+# Không để Git đổi xuống dòng (LF <-> CRLF) khi checkout — nếu không, clone trên Windows
+# (core.autocrlf=true) làm lệch checksum và cổng kiểm tra từ chối mọi lô.
+data/landing/** -text
