@@ -1,0 +1,877 @@
+﻿nam_thang,hang_xe,muc_dich_su_dung,loai_dinh_gia,so_hop_dong,gia_trung_vi,tuoi_xe_trung_binh
+2025-01,BYD,Không kinh doanh,new,1,756.0,0.0
+2025-01,BYD,Không kinh doanh,used,1,756.0,1.0
+2025-01,Ford,Không kinh doanh,new,11,855.0,0.0
+2025-01,Ford,Không kinh doanh,used,80,800.0,4.2
+2025-01,Ford,Kinh doanh vận tải,used,9,700.0,4.2
+2025-01,Honda,Không kinh doanh,new,14,650.0,0.1
+2025-01,Honda,Không kinh doanh,used,148,515.0,5.0
+2025-01,Honda,Kinh doanh vận tải,used,2,750.0,2.5
+2025-01,Hyundai,Không kinh doanh,new,64,524.5,0.1
+2025-01,Hyundai,Không kinh doanh,used,367,450.0,4.2
+2025-01,Hyundai,Kinh doanh vận tải,new,3,1030.0,0.3
+2025-01,Hyundai,Kinh doanh vận tải,used,11,460.0,5.4
+2025-01,Hyundai,Taxi,used,7,290.0,4.9
+2025-01,Kia,Không kinh doanh,new,23,609.0,0.1
+2025-01,Kia,Không kinh doanh,used,243,520.0,4.1
+2025-01,Kia,Kinh doanh vận tải,used,3,310.0,4.3
+2025-01,MG,Không kinh doanh,new,92,440.0,0.1
+2025-01,MG,Không kinh doanh,used,29,430.0,2.2
+2025-01,MG,Kinh doanh vận tải,new,1,444.0,0.0
+2025-01,MG,Kinh doanh vận tải,used,4,399.0,1.3
+2025-01,Mazda,Không kinh doanh,new,25,418.0,0.0
+2025-01,Mazda,Không kinh doanh,used,233,550.0,4.6
+2025-01,Mercedes Benz,Không kinh doanh,new,6,2839.0,0.0
+2025-01,Mercedes Benz,Không kinh doanh,used,27,1000.0,5.9
+2025-01,Mitsubishi,Không kinh doanh,new,48,627.0,0.0
+2025-01,Mitsubishi,Không kinh doanh,used,184,500.0,3.6
+2025-01,Mitsubishi,Kinh doanh vận tải,used,30,450.0,3.8
+2025-01,Mitsubishi,Taxi,used,3,589.0,1.3
+2025-01,Peugeot,Không kinh doanh,used,11,650.0,4.6
+2025-01,Suzuki,Không kinh doanh,new,1,569.9,0.0
+2025-01,Suzuki,Không kinh doanh,used,43,450.0,3.5
+2025-01,Suzuki,Kinh doanh vận tải,used,7,500.0,3.1
+2025-01,Toyota,Không kinh doanh,new,42,507.0,0.1
+2025-01,Toyota,Không kinh doanh,used,441,490.0,5.8
+2025-01,Toyota,Kinh doanh vận tải,used,12,445.0,5.2
+2025-01,Toyota,Taxi,used,22,526.0,3.5
+2025-01,VinFast,Không kinh doanh,new,107,322.0,0.0
+2025-01,VinFast,Không kinh doanh,used,225,322.0,1.7
+2025-01,VinFast,Kinh doanh vận tải,new,9,548.0,0.0
+2025-01,VinFast,Kinh doanh vận tải,used,5,540.0,1.6
+2025-01,VinFast,Taxi,new,43,490.0,0.0
+2025-01,VinFast,Taxi,used,44,456.6,1.5
+2025-02,BYD,Không kinh doanh,new,9,756.0,0.0
+2025-02,BYD,Kinh doanh vận tải,new,8,756.0,0.0
+2025-02,BYD,Kinh doanh vận tải,used,1,756.0,1.0
+2025-02,Ford,Không kinh doanh,new,7,864.0,0.1
+2025-02,Ford,Không kinh doanh,used,49,750.0,5.1
+2025-02,Ford,Kinh doanh vận tải,new,1,1091.0,0.0
+2025-02,Ford,Kinh doanh vận tải,used,8,405.0,6.6
+2025-02,Honda,Không kinh doanh,new,21,1099.0,0.1
+2025-02,Honda,Không kinh doanh,used,68,520.0,4.4
+2025-02,Hyundai,Không kinh doanh,new,35,518.0,0.1
+2025-02,Hyundai,Không kinh doanh,used,204,430.0,3.9
+2025-02,Hyundai,Kinh doanh vận tải,used,11,430.0,3.4
+2025-02,Hyundai,Taxi,used,10,300.0,5.1
+2025-02,Kia,Không kinh doanh,new,12,605.5,0.2
+2025-02,Kia,Không kinh doanh,used,128,520.0,3.8
+2025-02,Kia,Kinh doanh vận tải,used,2,315.0,6.0
+2025-02,MG,Không kinh doanh,new,32,455.5,0.0
+2025-02,MG,Không kinh doanh,used,17,430.0,2.4
+2025-02,MG,Kinh doanh vận tải,new,6,336.5,0.0
+2025-02,MG,Kinh doanh vận tải,used,1,359.0,1.0
+2025-02,Mazda,Không kinh doanh,new,8,468.5,0.0
+2025-02,Mazda,Không kinh doanh,used,117,530.0,5.0
+2025-02,Mercedes Benz,Không kinh doanh,used,11,1055.0,4.7
+2025-02,Mitsubishi,Không kinh doanh,new,24,596.5,0.2
+2025-02,Mitsubishi,Không kinh doanh,used,109,480.0,3.7
+2025-02,Mitsubishi,Kinh doanh vận tải,used,29,450.0,3.7
+2025-02,Mitsubishi,Taxi,new,3,566.1,0.3
+2025-02,Mitsubishi,Taxi,used,3,480.0,4.0
+2025-02,Peugeot,Không kinh doanh,used,7,680.0,4.7
+2025-02,Suzuki,Không kinh doanh,new,7,549.9,0.1
+2025-02,Suzuki,Không kinh doanh,used,28,467.5,3.3
+2025-02,Suzuki,Kinh doanh vận tải,used,9,475.0,3.3
+2025-02,Toyota,Không kinh doanh,new,36,515.0,0.1
+2025-02,Toyota,Không kinh doanh,used,254,493.5,6.0
+2025-02,Toyota,Kinh doanh vận tải,new,1,530.0,0.0
+2025-02,Toyota,Kinh doanh vận tải,used,18,442.5,4.4
+2025-02,Toyota,Taxi,used,14,419.2,4.4
+2025-02,VinFast,Không kinh doanh,new,158,322.0,0.0
+2025-02,VinFast,Không kinh doanh,used,66,330.0,2.8
+2025-02,VinFast,Kinh doanh vận tải,new,18,540.0,0.1
+2025-02,VinFast,Kinh doanh vận tải,used,4,473.0,2.0
+2025-02,VinFast,Taxi,new,49,532.0,0.0
+2025-02,VinFast,Taxi,used,31,524.1,1.0
+2025-03,BYD,Không kinh doanh,new,5,756.0,0.2
+2025-03,BYD,Không kinh doanh,used,1,756.0,1.0
+2025-03,BYD,Kinh doanh vận tải,new,5,756.0,0.0
+2025-03,Ford,Không kinh doanh,new,19,1261.0,0.2
+2025-03,Ford,Không kinh doanh,used,48,800.0,5.3
+2025-03,Ford,Kinh doanh vận tải,new,3,969.0,0.0
+2025-03,Ford,Kinh doanh vận tải,used,13,500.0,5.1
+2025-03,Honda,Không kinh doanh,new,13,638.0,0.1
+2025-03,Honda,Không kinh doanh,used,96,498.0,4.3
+2025-03,Honda,Kinh doanh vận tải,used,3,400.0,6.3
+2025-03,Hyundai,Không kinh doanh,new,69,538.0,0.1
+2025-03,Hyundai,Không kinh doanh,used,258,440.0,4.1
+2025-03,Hyundai,Kinh doanh vận tải,new,4,779.5,0.0
+2025-03,Hyundai,Kinh doanh vận tải,used,21,420.0,4.4
+2025-03,Hyundai,Taxi,used,1,330.0,3.0
+2025-03,Kia,Không kinh doanh,new,39,624.0,0.0
+2025-03,Kia,Không kinh doanh,used,148,515.0,4.2
+2025-03,Kia,Kinh doanh vận tải,used,10,258.5,7.0
+2025-03,MG,Không kinh doanh,new,41,428.0,0.1
+2025-03,MG,Không kinh doanh,used,25,430.0,2.3
+2025-03,MG,Kinh doanh vận tải,new,7,347.0,0.0
+2025-03,MG,Kinh doanh vận tải,used,2,405.0,1.5
+2025-03,MG,Taxi,new,1,465.0,0.0
+2025-03,Mazda,Không kinh doanh,new,25,418.0,0.0
+2025-03,Mazda,Không kinh doanh,used,140,545.0,5.0
+2025-03,Mazda,Taxi,new,1,408.0,1.0
+2025-03,Mercedes Benz,Không kinh doanh,used,18,1085.0,6.4
+2025-03,Mitsubishi,Không kinh doanh,new,70,588.8,0.0
+2025-03,Mitsubishi,Không kinh doanh,used,139,500.0,3.7
+2025-03,Mitsubishi,Kinh doanh vận tải,new,3,598.0,0.0
+2025-03,Mitsubishi,Kinh doanh vận tải,used,53,480.0,3.5
+2025-03,Mitsubishi,Taxi,new,3,587.0,0.0
+2025-03,Mitsubishi,Taxi,used,4,588.5,1.0
+2025-03,Peugeot,Không kinh doanh,used,14,717.5,3.9
+2025-03,Suzuki,Không kinh doanh,new,3,551.9,0.0
+2025-03,Suzuki,Không kinh doanh,used,45,450.0,3.2
+2025-03,Suzuki,Kinh doanh vận tải,used,14,460.0,3.3
+2025-03,Toyota,Không kinh doanh,new,67,510.0,0.0
+2025-03,Toyota,Không kinh doanh,used,322,500.0,5.5
+2025-03,Toyota,Kinh doanh vận tải,new,1,903.2,0.0
+2025-03,Toyota,Kinh doanh vận tải,used,35,440.0,4.2
+2025-03,Toyota,Taxi,used,5,458.0,2.6
+2025-03,VinFast,Không kinh doanh,new,191,320.0,0.0
+2025-03,VinFast,Không kinh doanh,used,79,470.0,2.6
+2025-03,VinFast,Kinh doanh vận tải,new,30,540.0,0.0
+2025-03,VinFast,Kinh doanh vận tải,used,7,495.0,1.4
+2025-03,VinFast,Taxi,new,104,525.5,0.0
+2025-03,VinFast,Taxi,used,3,445.0,1.3
+2025-04,BYD,Không kinh doanh,new,5,756.0,0.0
+2025-04,BYD,Kinh doanh vận tải,new,3,756.0,0.0
+2025-04,Ford,Không kinh doanh,new,21,1050.0,0.0
+2025-04,Ford,Không kinh doanh,used,47,736.0,3.9
+2025-04,Ford,Kinh doanh vận tải,new,3,877.0,0.0
+2025-04,Ford,Kinh doanh vận tải,used,6,555.0,4.7
+2025-04,Honda,Không kinh doanh,new,11,657.6,0.0
+2025-04,Honda,Không kinh doanh,used,84,505.0,4.8
+2025-04,Honda,Kinh doanh vận tải,used,1,340.0,7.0
+2025-04,Hyundai,Không kinh doanh,new,53,526.0,0.0
+2025-04,Hyundai,Không kinh doanh,used,186,450.0,4.2
+2025-04,Hyundai,Kinh doanh vận tải,new,5,1035.0,0.0
+2025-04,Hyundai,Kinh doanh vận tải,used,16,395.0,3.9
+2025-04,Hyundai,Taxi,used,2,280.0,6.0
+2025-04,Kia,Không kinh doanh,new,31,639.0,0.0
+2025-04,Kia,Không kinh doanh,used,175,520.0,3.8
+2025-04,Kia,Kinh doanh vận tải,new,2,638.5,0.0
+2025-04,Kia,Kinh doanh vận tải,used,5,330.0,4.4
+2025-04,Kia,Taxi,used,1,600.0,2.0
+2025-04,MG,Không kinh doanh,new,46,447.5,0.0
+2025-04,MG,Không kinh doanh,used,13,420.0,2.1
+2025-04,MG,Kinh doanh vận tải,new,8,430.0,0.0
+2025-04,Mazda,Không kinh doanh,new,40,548.0,0.0
+2025-04,Mazda,Không kinh doanh,used,135,500.0,4.7
+2025-04,Mercedes Benz,Không kinh doanh,used,15,912.0,6.1
+2025-04,Mitsubishi,Không kinh doanh,new,60,588.3,0.0
+2025-04,Mitsubishi,Không kinh doanh,used,139,500.0,3.4
+2025-04,Mitsubishi,Kinh doanh vận tải,new,11,638.0,0.0
+2025-04,Mitsubishi,Kinh doanh vận tải,used,45,480.0,2.8
+2025-04,Mitsubishi,Taxi,new,4,593.0,0.0
+2025-04,Mitsubishi,Taxi,used,1,310.0,3.0
+2025-04,Peugeot,Không kinh doanh,used,7,720.0,4.7
+2025-04,Suzuki,Không kinh doanh,new,8,552.4,0.0
+2025-04,Suzuki,Không kinh doanh,used,29,430.0,3.5
+2025-04,Suzuki,Kinh doanh vận tải,new,1,544.9,0.0
+2025-04,Suzuki,Kinh doanh vận tải,used,9,475.0,2.9
+2025-04,Toyota,Không kinh doanh,new,95,515.0,0.0
+2025-04,Toyota,Không kinh doanh,used,293,460.0,5.5
+2025-04,Toyota,Kinh doanh vận tải,new,2,811.0,0.0
+2025-04,Toyota,Kinh doanh vận tải,used,26,414.0,5.1
+2025-04,Toyota,Taxi,new,2,452.0,0.0
+2025-04,Toyota,Taxi,used,5,417.6,3.0
+2025-04,VinFast,Không kinh doanh,new,181,307.0,0.0
+2025-04,VinFast,Không kinh doanh,used,65,480.0,2.8
+2025-04,VinFast,Kinh doanh vận tải,new,39,529.0,0.0
+2025-04,VinFast,Kinh doanh vận tải,used,5,460.0,2.2
+2025-04,VinFast,Taxi,new,72,529.0,0.0
+2025-04,VinFast,Taxi,used,5,450.0,1.2
+2025-05,BYD,Không kinh doanh,new,11,799.0,0.0
+2025-05,BYD,Không kinh doanh,used,1,660.0,1.0
+2025-05,BYD,Kinh doanh vận tải,new,5,756.0,0.0
+2025-05,Ford,Không kinh doanh,new,30,798.0,0.0
+2025-05,Ford,Không kinh doanh,used,40,800.0,4.3
+2025-05,Ford,Kinh doanh vận tải,new,2,1034.5,0.0
+2025-05,Ford,Kinh doanh vận tải,used,16,670.0,3.7
+2025-05,Honda,Không kinh doanh,new,11,689.5,0.1
+2025-05,Honda,Không kinh doanh,used,75,540.0,4.9
+2025-05,Honda,Kinh doanh vận tải,used,3,460.0,3.7
+2025-05,Hyundai,Không kinh doanh,new,73,517.0,0.0
+2025-05,Hyundai,Không kinh doanh,used,208,450.0,4.3
+2025-05,Hyundai,Kinh doanh vận tải,new,7,1030.0,0.0
+2025-05,Hyundai,Kinh doanh vận tải,used,12,395.0,3.1
+2025-05,Hyundai,Taxi,used,1,200.0,7.0
+2025-05,Kia,Không kinh doanh,new,24,588.0,0.0
+2025-05,Kia,Không kinh doanh,used,154,507.5,4.4
+2025-05,Kia,Kinh doanh vận tải,new,1,422.0,0.0
+2025-05,Kia,Kinh doanh vận tải,used,2,474.5,3.0
+2025-05,MG,Không kinh doanh,new,46,439.0,0.0
+2025-05,MG,Không kinh doanh,used,20,420.0,2.5
+2025-05,MG,Kinh doanh vận tải,new,6,429.0,0.0
+2025-05,MG,Kinh doanh vận tải,used,1,420.0,2.0
+2025-05,MG,Taxi,new,1,517.0,0.0
+2025-05,Mazda,Không kinh doanh,new,33,614.0,0.0
+2025-05,Mazda,Không kinh doanh,used,164,530.0,4.8
+2025-05,Mazda,Kinh doanh vận tải,used,2,580.5,1.0
+2025-05,Mazda,Taxi,used,1,350.0,9.0
+2025-05,Mercedes Benz,Không kinh doanh,used,14,950.0,6.3
+2025-05,Mitsubishi,Không kinh doanh,new,39,617.0,0.0
+2025-05,Mitsubishi,Không kinh doanh,used,134,450.0,3.3
+2025-05,Mitsubishi,Kinh doanh vận tải,new,13,592.0,0.0
+2025-05,Mitsubishi,Kinh doanh vận tải,used,38,460.0,3.1
+2025-05,Mitsubishi,Taxi,new,4,572.0,0.0
+2025-05,Mitsubishi,Taxi,used,3,505.0,3.3
+2025-05,Peugeot,Không kinh doanh,used,3,750.0,3.3
+2025-05,Suzuki,Không kinh doanh,new,4,551.9,0.0
+2025-05,Suzuki,Không kinh doanh,used,19,450.0,3.9
+2025-05,Suzuki,Kinh doanh vận tải,used,7,450.0,3.4
+2025-05,Toyota,Không kinh doanh,new,81,509.0,0.0
+2025-05,Toyota,Không kinh doanh,used,305,500.0,5.4
+2025-05,Toyota,Kinh doanh vận tải,new,2,637.0,0.0
+2025-05,Toyota,Kinh doanh vận tải,used,31,490.0,4.1
+2025-05,Toyota,Taxi,new,1,458.0,0.0
+2025-05,Toyota,Taxi,used,18,290.0,6.6
+2025-05,VinFast,Không kinh doanh,new,184,299.0,0.0
+2025-05,VinFast,Không kinh doanh,used,67,350.0,2.8
+2025-05,VinFast,Kinh doanh vận tải,new,41,529.0,0.0
+2025-05,VinFast,Kinh doanh vận tải,used,8,450.5,1.6
+2025-05,VinFast,Taxi,new,57,524.1,0.0
+2025-05,VinFast,Taxi,used,6,465.0,1.8
+2025-06,BYD,Không kinh doanh,new,5,756.0,0.0
+2025-06,BYD,Kinh doanh vận tải,new,2,756.0,0.0
+2025-06,Ford,Không kinh doanh,new,16,803.5,0.0
+2025-06,Ford,Không kinh doanh,used,53,810.0,4.9
+2025-06,Ford,Kinh doanh vận tải,used,7,610.0,3.6
+2025-06,Honda,Không kinh doanh,new,15,671.7,0.0
+2025-06,Honda,Không kinh doanh,used,99,500.0,4.2
+2025-06,Honda,Kinh doanh vận tải,new,1,664.0,0.0
+2025-06,Honda,Taxi,used,1,310.0,8.0
+2025-06,Hyundai,Không kinh doanh,new,52,500.0,0.0
+2025-06,Hyundai,Không kinh doanh,used,207,450.0,4.3
+2025-06,Hyundai,Kinh doanh vận tải,new,3,536.0,0.0
+2025-06,Hyundai,Kinh doanh vận tải,used,21,400.0,4.9
+2025-06,Hyundai,Taxi,new,1,488.0,0.0
+2025-06,Hyundai,Taxi,used,4,285.0,6.0
+2025-06,Kia,Không kinh doanh,new,32,603.0,0.0
+2025-06,Kia,Không kinh doanh,used,143,520.0,4.1
+2025-06,Kia,Kinh doanh vận tải,used,3,400.0,3.3
+2025-06,MG,Không kinh doanh,new,49,436.2,0.0
+2025-06,MG,Không kinh doanh,used,19,401.0,2.5
+2025-06,MG,Kinh doanh vận tải,new,1,323.0,0.0
+2025-06,MG,Taxi,used,1,320.0,1.0
+2025-06,Mazda,Không kinh doanh,new,40,550.0,0.0
+2025-06,Mazda,Không kinh doanh,used,135,500.0,5.4
+2025-06,Mazda,Kinh doanh vận tải,new,1,602.0,0.0
+2025-06,Mercedes Benz,Không kinh doanh,used,18,925.0,7.7
+2025-06,Mitsubishi,Không kinh doanh,new,48,593.0,0.0
+2025-06,Mitsubishi,Không kinh doanh,used,118,500.0,3.6
+2025-06,Mitsubishi,Kinh doanh vận tải,new,11,582.0,0.0
+2025-06,Mitsubishi,Kinh doanh vận tải,used,42,445.0,3.6
+2025-06,Mitsubishi,Taxi,new,25,560.0,0.0
+2025-06,Mitsubishi,Taxi,used,1,486.0,2.0
+2025-06,Peugeot,Không kinh doanh,new,1,1062.0,0.0
+2025-06,Peugeot,Không kinh doanh,used,9,750.0,4.9
+2025-06,Suzuki,Không kinh doanh,new,13,539.9,0.0
+2025-06,Suzuki,Không kinh doanh,used,21,450.0,4.0
+2025-06,Suzuki,Kinh doanh vận tải,used,8,435.0,3.6
+2025-06,Suzuki,Taxi,used,2,460.0,2.5
+2025-06,Toyota,Không kinh doanh,new,69,495.0,0.0
+2025-06,Toyota,Không kinh doanh,used,271,500.0,5.6
+2025-06,Toyota,Kinh doanh vận tải,new,2,582.5,0.0
+2025-06,Toyota,Kinh doanh vận tải,used,24,480.0,3.3
+2025-06,Toyota,Taxi,new,3,453.0,0.0
+2025-06,Toyota,Taxi,used,3,420.0,2.3
+2025-06,VinFast,Cho thuê tự lái,new,1,300.0,0.0
+2025-06,VinFast,Không kinh doanh,new,235,294.7,0.0
+2025-06,VinFast,Không kinh doanh,used,87,495.0,2.9
+2025-06,VinFast,Kinh doanh vận tải,new,29,507.8,0.0
+2025-06,VinFast,Kinh doanh vận tải,used,10,505.0,2.0
+2025-06,VinFast,Taxi,new,88,507.8,0.0
+2025-06,VinFast,Taxi,used,29,460.0,2.2
+2025-07,BYD,Không kinh doanh,new,4,823.9,0.0
+2025-07,BYD,Kinh doanh vận tải,new,7,756.0,0.0
+2025-07,Ford,Không kinh doanh,new,42,852.0,0.1
+2025-07,Ford,Không kinh doanh,used,48,800.0,3.6
+2025-07,Ford,Kinh doanh vận tải,new,4,954.0,0.0
+2025-07,Ford,Kinh doanh vận tải,used,9,680.0,2.9
+2025-07,Honda,Không kinh doanh,new,20,525.0,0.0
+2025-07,Honda,Không kinh doanh,used,108,500.0,4.5
+2025-07,Honda,Kinh doanh vận tải,used,4,457.5,3.0
+2025-07,Hyundai,Không kinh doanh,new,61,564.0,0.0
+2025-07,Hyundai,Không kinh doanh,used,258,450.0,3.6
+2025-07,Hyundai,Kinh doanh vận tải,new,12,586.5,0.0
+2025-07,Hyundai,Kinh doanh vận tải,used,19,320.0,4.1
+2025-07,Hyundai,Taxi,used,2,435.0,3.0
+2025-07,Kia,Không kinh doanh,new,37,599.0,0.0
+2025-07,Kia,Không kinh doanh,used,166,530.0,3.1
+2025-07,Kia,Kinh doanh vận tải,used,5,480.0,4.2
+2025-07,Kia,Taxi,new,1,629.0,0.0
+2025-07,Kia,Taxi,used,1,260.0,5.0
+2025-07,MG,Không kinh doanh,new,42,428.5,0.0
+2025-07,MG,Không kinh doanh,used,30,420.0,1.9
+2025-07,MG,Kinh doanh vận tải,new,8,399.1,0.0
+2025-07,MG,Kinh doanh vận tải,used,2,414.5,1.0
+2025-07,MG,Taxi,new,1,382.0,0.0
+2025-07,Mazda,Không kinh doanh,new,31,553.0,0.0
+2025-07,Mazda,Không kinh doanh,used,153,505.0,4.6
+2025-07,Mercedes Benz,Không kinh doanh,used,18,1350.0,5.2
+2025-07,Mitsubishi,Không kinh doanh,new,88,588.0,0.0
+2025-07,Mitsubishi,Không kinh doanh,used,148,472.5,3.2
+2025-07,Mitsubishi,Kinh doanh vận tải,new,14,576.9,0.0
+2025-07,Mitsubishi,Kinh doanh vận tải,used,45,450.0,2.8
+2025-07,Mitsubishi,Taxi,new,21,560.0,0.0
+2025-07,Mitsubishi,Taxi,used,3,500.0,2.7
+2025-07,Peugeot,Không kinh doanh,used,9,600.0,6.0
+2025-07,Suzuki,Không kinh doanh,new,4,554.9,0.0
+2025-07,Suzuki,Không kinh doanh,used,26,445.0,3.7
+2025-07,Suzuki,Kinh doanh vận tải,used,5,450.0,2.8
+2025-07,Suzuki,Taxi,used,1,460.0,1.0
+2025-07,Toyota,Không kinh doanh,new,80,545.0,0.0
+2025-07,Toyota,Không kinh doanh,used,322,497.5,5.0
+2025-07,Toyota,Kinh doanh vận tải,new,1,750.0,0.0
+2025-07,Toyota,Kinh doanh vận tải,used,18,450.0,3.9
+2025-07,Toyota,Taxi,used,14,390.0,5.8
+2025-07,VinFast,Không kinh doanh,new,213,291.7,0.0
+2025-07,VinFast,Không kinh doanh,used,89,500.0,2.9
+2025-07,VinFast,Kinh doanh vận tải,new,32,507.8,0.0
+2025-07,VinFast,Kinh doanh vận tải,used,11,460.0,1.3
+2025-07,VinFast,Taxi,new,33,524.1,0.0
+2025-07,VinFast,Taxi,used,33,350.0,1.6
+2025-08,BYD,Không kinh doanh,new,6,756.0,0.0
+2025-08,BYD,Kinh doanh vận tải,new,9,756.0,0.0
+2025-08,BYD,Taxi,new,1,756.0,0.0
+2025-08,Ford,Không kinh doanh,new,22,1182.0,0.0
+2025-08,Ford,Không kinh doanh,used,37,792.0,3.9
+2025-08,Ford,Kinh doanh vận tải,new,2,964.0,0.0
+2025-08,Ford,Kinh doanh vận tải,used,25,400.0,5.7
+2025-08,Honda,Không kinh doanh,new,22,571.3,0.0
+2025-08,Honda,Không kinh doanh,used,73,500.0,4.5
+2025-08,Honda,Kinh doanh vận tải,used,2,490.0,2.0
+2025-08,Hyundai,Không kinh doanh,new,53,556.6,0.0
+2025-08,Hyundai,Không kinh doanh,used,223,480.0,4.1
+2025-08,Hyundai,Kinh doanh vận tải,new,8,1000.0,0.0
+2025-08,Hyundai,Kinh doanh vận tải,used,13,460.0,3.0
+2025-08,Hyundai,Taxi,used,4,285.0,5.0
+2025-08,Kia,Không kinh doanh,new,32,590.5,0.0
+2025-08,Kia,Không kinh doanh,used,174,520.0,3.8
+2025-08,Kia,Kinh doanh vận tải,used,3,325.0,4.7
+2025-08,Kia,Taxi,used,4,432.5,3.8
+2025-08,MG,Không kinh doanh,new,41,400.2,0.0
+2025-08,MG,Không kinh doanh,used,21,415.0,1.7
+2025-08,MG,Kinh doanh vận tải,new,3,405.0,0.0
+2025-08,MG,Kinh doanh vận tải,used,2,370.0,2.0
+2025-08,Mazda,Không kinh doanh,new,16,596.5,0.1
+2025-08,Mazda,Không kinh doanh,used,138,520.0,4.5
+2025-08,Mazda,Kinh doanh vận tải,used,2,425.0,6.5
+2025-08,Mercedes Benz,Không kinh doanh,used,10,1000.0,5.2
+2025-08,Mitsubishi,Cho thuê tự lái,used,1,580.0,2.0
+2025-08,Mitsubishi,Không kinh doanh,new,51,590.0,0.1
+2025-08,Mitsubishi,Không kinh doanh,used,140,503.0,2.8
+2025-08,Mitsubishi,Kinh doanh vận tải,new,7,634.0,0.0
+2025-08,Mitsubishi,Kinh doanh vận tải,used,44,495.0,2.4
+2025-08,Mitsubishi,Taxi,new,3,584.0,0.0
+2025-08,Mitsubishi,Taxi,used,1,430.0,6.0
+2025-08,Peugeot,Không kinh doanh,new,1,1052.0,0.0
+2025-08,Peugeot,Không kinh doanh,used,11,780.0,4.2
+2025-08,Suzuki,Không kinh doanh,new,6,548.0,0.2
+2025-08,Suzuki,Không kinh doanh,used,19,460.0,3.2
+2025-08,Suzuki,Kinh doanh vận tải,used,10,407.5,3.5
+2025-08,Toyota,Không kinh doanh,new,66,504.0,0.0
+2025-08,Toyota,Không kinh doanh,used,251,470.0,5.1
+2025-08,Toyota,Kinh doanh vận tải,new,1,433.1,0.0
+2025-08,Toyota,Kinh doanh vận tải,used,22,495.0,4.2
+2025-08,Toyota,Taxi,used,12,290.0,6.8
+2025-08,VinFast,Không kinh doanh,new,203,300.0,0.0
+2025-08,VinFast,Không kinh doanh,used,69,430.0,2.7
+2025-08,VinFast,Kinh doanh vận tải,new,30,522.3,0.0
+2025-08,VinFast,Kinh doanh vận tải,used,9,460.0,1.2
+2025-08,VinFast,Taxi,new,37,507.8,0.0
+2025-08,VinFast,Taxi,used,27,350.0,1.8
+2025-09,BYD,Không kinh doanh,new,16,799.0,0.0
+2025-09,BYD,Kinh doanh vận tải,new,3,756.0,0.0
+2025-09,Ford,Không kinh doanh,new,16,1221.0,0.0
+2025-09,Ford,Không kinh doanh,used,40,800.0,3.0
+2025-09,Ford,Kinh doanh vận tải,new,5,949.0,0.0
+2025-09,Ford,Kinh doanh vận tải,used,16,484.0,4.1
+2025-09,Honda,Không kinh doanh,new,15,675.6,0.0
+2025-09,Honda,Không kinh doanh,used,80,505.5,3.9
+2025-09,Honda,Kinh doanh vận tải,used,3,410.0,4.7
+2025-09,Hyundai,Không kinh doanh,new,57,561.0,0.0
+2025-09,Hyundai,Không kinh doanh,used,243,450.0,3.4
+2025-09,Hyundai,Kinh doanh vận tải,new,6,515.3,0.0
+2025-09,Hyundai,Kinh doanh vận tải,used,13,480.0,3.5
+2025-09,Hyundai,Taxi,used,2,400.0,4.0
+2025-09,Kia,Không kinh doanh,new,25,599.0,0.0
+2025-09,Kia,Không kinh doanh,used,173,550.0,3.2
+2025-09,Kia,Kinh doanh vận tải,used,4,555.0,1.5
+2025-09,MG,Không kinh doanh,new,41,445.0,0.0
+2025-09,MG,Không kinh doanh,used,30,403.0,1.3
+2025-09,MG,Kinh doanh vận tải,new,3,390.0,0.0
+2025-09,MG,Kinh doanh vận tải,used,1,401.0,1.0
+2025-09,Mazda,Không kinh doanh,new,31,609.0,0.0
+2025-09,Mazda,Không kinh doanh,used,140,540.0,3.8
+2025-09,Mazda,Kinh doanh vận tải,used,3,360.0,7.0
+2025-09,Mercedes Benz,Không kinh doanh,used,18,1340.0,4.8
+2025-09,Mitsubishi,Không kinh doanh,new,70,563.0,0.0
+2025-09,Mitsubishi,Không kinh doanh,used,118,500.0,2.8
+2025-09,Mitsubishi,Kinh doanh vận tải,new,12,576.6,0.0
+2025-09,Mitsubishi,Kinh doanh vận tải,used,35,460.0,2.7
+2025-09,Mitsubishi,Taxi,new,11,560.0,0.0
+2025-09,Mitsubishi,Taxi,used,1,500.0,2.0
+2025-09,Peugeot,Không kinh doanh,used,5,580.0,4.2
+2025-09,Suzuki,Cho thuê tự lái,used,1,430.0,2.0
+2025-09,Suzuki,Không kinh doanh,new,3,529.9,0.0
+2025-09,Suzuki,Không kinh doanh,used,24,450.0,3.3
+2025-09,Suzuki,Kinh doanh vận tải,used,1,440.0,3.0
+2025-09,Toyota,Không kinh doanh,new,94,612.5,0.0
+2025-09,Toyota,Không kinh doanh,used,284,490.0,4.8
+2025-09,Toyota,Kinh doanh vận tải,new,1,433.1,0.0
+2025-09,Toyota,Kinh doanh vận tải,used,17,560.0,1.8
+2025-09,Toyota,Taxi,used,2,450.0,4.5
+2025-09,VinFast,Không kinh doanh,new,124,484.9,0.0
+2025-09,VinFast,Không kinh doanh,used,54,425.0,3.1
+2025-09,VinFast,Kinh doanh vận tải,new,38,507.8,0.0
+2025-09,VinFast,Kinh doanh vận tải,used,10,450.0,1.2
+2025-09,VinFast,Taxi,new,26,653.9,0.0
+2025-09,VinFast,Taxi,used,15,405.0,1.5
+2025-10,BYD,Không kinh doanh,new,12,756.0,0.0
+2025-10,BYD,Kinh doanh vận tải,new,8,756.0,0.0
+2025-10,Ford,Không kinh doanh,new,28,858.0,0.0
+2025-10,Ford,Không kinh doanh,used,70,800.0,4.0
+2025-10,Ford,Kinh doanh vận tải,new,3,939.0,0.0
+2025-10,Ford,Kinh doanh vận tải,used,9,550.0,5.9
+2025-10,Honda,Không kinh doanh,new,26,539.0,0.0
+2025-10,Honda,Không kinh doanh,used,114,500.0,4.4
+2025-10,Honda,Kinh doanh vận tải,used,3,655.0,1.7
+2025-10,Hyundai,Không kinh doanh,new,99,555.0,0.0
+2025-10,Hyundai,Không kinh doanh,used,314,450.0,4.0
+2025-10,Hyundai,Kinh doanh vận tải,new,7,515.4,0.0
+2025-10,Hyundai,Kinh doanh vận tải,used,8,350.0,5.3
+2025-10,Hyundai,Taxi,used,3,380.0,1.7
+2025-10,Kia,Không kinh doanh,new,49,604.0,0.0
+2025-10,Kia,Không kinh doanh,used,187,550.0,3.3
+2025-10,Kia,Kinh doanh vận tải,used,4,475.0,4.5
+2025-10,Kia,Taxi,used,1,280.0,5.0
+2025-10,MG,Không kinh doanh,new,63,440.0,0.0
+2025-10,MG,Không kinh doanh,used,36,410.0,1.9
+2025-10,MG,Kinh doanh vận tải,new,5,440.0,0.0
+2025-10,MG,Kinh doanh vận tải,used,2,395.0,1.0
+2025-10,Mazda,Không kinh doanh,new,55,700.0,0.0
+2025-10,Mazda,Không kinh doanh,used,165,540.0,3.9
+2025-10,Mercedes Benz,Không kinh doanh,used,30,950.0,5.9
+2025-10,Mitsubishi,Không kinh doanh,new,141,588.0,0.0
+2025-10,Mitsubishi,Không kinh doanh,used,144,500.0,3.1
+2025-10,Mitsubishi,Kinh doanh vận tải,new,14,630.7,0.0
+2025-10,Mitsubishi,Kinh doanh vận tải,used,37,475.0,2.6
+2025-10,Mitsubishi,Taxi,new,6,605.0,0.0
+2025-10,Mitsubishi,Taxi,used,2,445.0,2.5
+2025-10,Peugeot,Không kinh doanh,new,1,848.0,0.0
+2025-10,Peugeot,Không kinh doanh,used,9,800.0,3.6
+2025-10,Suzuki,Không kinh doanh,new,4,527.4,0.0
+2025-10,Suzuki,Không kinh doanh,used,26,430.0,3.6
+2025-10,Suzuki,Kinh doanh vận tải,used,3,450.0,3.3
+2025-10,Suzuki,Taxi,used,2,380.0,2.0
+2025-10,Toyota,Không kinh doanh,new,142,542.3,0.0
+2025-10,Toyota,Không kinh doanh,used,435,460.0,5.0
+2025-10,Toyota,Kinh doanh vận tải,new,1,441.0,0.0
+2025-10,Toyota,Kinh doanh vận tải,used,28,425.0,4.6
+2025-10,Toyota,Taxi,used,10,405.0,3.8
+2025-10,VinFast,Không kinh doanh,new,242,507.8,0.0
+2025-10,VinFast,Không kinh doanh,used,118,412.5,2.6
+2025-10,VinFast,Kinh doanh vận tải,new,130,507.8,0.0
+2025-10,VinFast,Kinh doanh vận tải,used,9,500.0,1.2
+2025-10,VinFast,Taxi,new,117,524.0,0.1
+2025-10,VinFast,Taxi,used,69,400.0,1.4
+2025-11,BYD,Không kinh doanh,new,8,849.0,0.0
+2025-11,BYD,Kinh doanh vận tải,new,3,756.0,0.0
+2025-11,Ford,Không kinh doanh,new,40,1126.0,0.0
+2025-11,Ford,Không kinh doanh,used,71,780.0,3.5
+2025-11,Ford,Kinh doanh vận tải,new,1,1025.0,0.0
+2025-11,Ford,Kinh doanh vận tải,used,11,600.0,4.7
+2025-11,Honda,Không kinh doanh,new,22,569.5,0.0
+2025-11,Honda,Không kinh doanh,used,109,500.0,4.3
+2025-11,Honda,Kinh doanh vận tải,used,2,736.0,1.0
+2025-11,Hyundai,Không kinh doanh,new,102,521.0,0.0
+2025-11,Hyundai,Không kinh doanh,used,281,480.0,3.4
+2025-11,Hyundai,Kinh doanh vận tải,new,4,483.5,0.0
+2025-11,Hyundai,Kinh doanh vận tải,used,9,410.0,3.1
+2025-11,Hyundai,Taxi,used,7,300.0,1.9
+2025-11,Kia,Không kinh doanh,new,54,605.0,0.0
+2025-11,Kia,Không kinh doanh,used,175,540.0,3.0
+2025-11,Kia,Kinh doanh vận tải,new,1,1261.0,0.0
+2025-11,Kia,Kinh doanh vận tải,used,2,327.5,3.0
+2025-11,MG,Không kinh doanh,new,44,458.5,0.0
+2025-11,MG,Không kinh doanh,used,43,405.0,1.7
+2025-11,MG,Kinh doanh vận tải,new,4,325.0,0.0
+2025-11,MG,Taxi,new,1,465.0,0.0
+2025-11,MG,Taxi,used,27,300.0,1.0
+2025-11,Mazda,Không kinh doanh,new,36,699.0,0.0
+2025-11,Mazda,Không kinh doanh,used,173,540.0,3.8
+2025-11,Mazda,Kinh doanh vận tải,used,1,390.0,7.0
+2025-11,Mercedes Benz,Không kinh doanh,used,20,930.0,6.0
+2025-11,Mitsubishi,Không kinh doanh,new,143,583.0,0.0
+2025-11,Mitsubishi,Không kinh doanh,used,127,480.0,3.2
+2025-11,Mitsubishi,Kinh doanh vận tải,new,13,582.0,0.0
+2025-11,Mitsubishi,Kinh doanh vận tải,used,37,440.0,3.7
+2025-11,Mitsubishi,Taxi,new,4,548.0,0.0
+2025-11,Mitsubishi,Taxi,used,3,530.0,1.3
+2025-11,Peugeot,Không kinh doanh,new,2,991.0,0.0
+2025-11,Peugeot,Không kinh doanh,used,4,690.0,4.3
+2025-11,Suzuki,Không kinh doanh,new,7,569.9,0.1
+2025-11,Suzuki,Không kinh doanh,used,26,430.0,3.6
+2025-11,Suzuki,Kinh doanh vận tải,new,1,539.9,0.0
+2025-11,Suzuki,Kinh doanh vận tải,used,3,450.0,3.0
+2025-11,Toyota,Không kinh doanh,new,130,553.0,0.0
+2025-11,Toyota,Không kinh doanh,used,372,480.0,4.5
+2025-11,Toyota,Kinh doanh vận tải,new,2,619.0,0.0
+2025-11,Toyota,Kinh doanh vận tải,used,28,450.0,3.6
+2025-11,Toyota,Taxi,used,1,550.0,8.0
+2025-11,VinFast,Không kinh doanh,new,272,387.7,0.0
+2025-11,VinFast,Không kinh doanh,used,101,430.0,2.3
+2025-11,VinFast,Kinh doanh vận tải,new,148,654.4,0.0
+2025-11,VinFast,Kinh doanh vận tải,used,10,545.0,1.2
+2025-11,VinFast,Taxi,new,30,704.6,0.0
+2025-11,VinFast,Taxi,used,47,420.0,1.5
+2025-12,BYD,Không kinh doanh,new,9,756.0,0.0
+2025-12,BYD,Không kinh doanh,used,1,936.0,0.0
+2025-12,BYD,Kinh doanh vận tải,new,10,756.0,0.0
+2025-12,Ford,Không kinh doanh,new,45,871.0,0.0
+2025-12,Ford,Không kinh doanh,used,106,770.0,2.9
+2025-12,Ford,Kinh doanh vận tải,new,3,1041.0,0.0
+2025-12,Ford,Kinh doanh vận tải,used,22,650.0,3.2
+2025-12,Honda,Không kinh doanh,new,26,612.5,0.0
+2025-12,Honda,Không kinh doanh,used,130,510.0,4.3
+2025-12,Honda,Kinh doanh vận tải,used,2,465.0,2.5
+2025-12,Hyundai,Không kinh doanh,new,117,556.0,0.0
+2025-12,Hyundai,Không kinh doanh,used,373,450.0,3.8
+2025-12,Hyundai,Kinh doanh vận tải,new,2,531.0,0.0
+2025-12,Hyundai,Kinh doanh vận tải,used,20,470.0,4.2
+2025-12,Hyundai,Taxi,used,6,285.0,4.5
+2025-12,Kia,Không kinh doanh,new,57,634.0,0.0
+2025-12,Kia,Không kinh doanh,used,264,542.5,3.7
+2025-12,Kia,Kinh doanh vận tải,used,7,570.0,2.3
+2025-12,Kia,Taxi,used,2,290.0,4.0
+2025-12,MG,Không kinh doanh,new,45,443.0,0.0
+2025-12,MG,Không kinh doanh,used,54,405.0,1.4
+2025-12,MG,Kinh doanh vận tải,new,8,325.0,0.0
+2025-12,MG,Kinh doanh vận tải,used,1,300.0,1.0
+2025-12,MG,Taxi,used,30,300.0,1.0
+2025-12,Mazda,Không kinh doanh,new,51,606.0,0.0
+2025-12,Mazda,Không kinh doanh,used,215,500.0,4.5
+2025-12,Mercedes Benz,Không kinh doanh,used,26,1075.0,5.0
+2025-12,Mitsubishi,Không kinh doanh,new,168,581.8,0.0
+2025-12,Mitsubishi,Không kinh doanh,used,189,500.0,3.3
+2025-12,Mitsubishi,Kinh doanh vận tải,new,11,598.0,0.0
+2025-12,Mitsubishi,Kinh doanh vận tải,used,35,500.0,2.7
+2025-12,Mitsubishi,Taxi,new,1,572.0,0.0
+2025-12,Mitsubishi,Taxi,used,2,435.0,2.5
+2025-12,Peugeot,Không kinh doanh,new,3,1046.0,0.0
+2025-12,Peugeot,Không kinh doanh,used,13,760.0,4.2
+2025-12,Suzuki,Không kinh doanh,new,3,533.0,0.0
+2025-12,Suzuki,Không kinh doanh,used,39,430.0,3.5
+2025-12,Suzuki,Kinh doanh vận tải,used,6,465.0,3.0
+2025-12,Toyota,Không kinh doanh,new,135,540.0,0.0
+2025-12,Toyota,Không kinh doanh,used,421,450.0,5.2
+2025-12,Toyota,Kinh doanh vận tải,new,1,818.0,0.0
+2025-12,Toyota,Kinh doanh vận tải,used,42,450.0,4.1
+2025-12,Toyota,Taxi,new,2,417.5,0.0
+2025-12,Toyota,Taxi,used,37,450.0,1.9
+2025-12,VinFast,Không kinh doanh,new,383,502.8,0.0
+2025-12,VinFast,Không kinh doanh,used,158,389.5,2.1
+2025-12,VinFast,Kinh doanh vận tải,new,288,703.2,0.0
+2025-12,VinFast,Kinh doanh vận tải,used,19,520.0,0.6
+2025-12,VinFast,Taxi,new,51,704.6,0.0
+2025-12,VinFast,Taxi,used,104,420.0,1.2
+2026-01,BYD,Không kinh doanh,new,27,882.0,0.0
+2026-01,BYD,Không kinh doanh,used,5,700.0,1.0
+2026-01,BYD,Kinh doanh vận tải,new,3,756.0,0.3
+2026-01,BYD,Kinh doanh vận tải,used,1,680.0,1.0
+2026-01,Ford,Không kinh doanh,new,28,881.0,0.1
+2026-01,Ford,Không kinh doanh,used,97,760.0,4.3
+2026-01,Ford,Kinh doanh vận tải,new,1,929.0,0.0
+2026-01,Ford,Kinh doanh vận tải,used,10,600.0,3.5
+2026-01,Honda,Không kinh doanh,new,8,614.8,0.0
+2026-01,Honda,Không kinh doanh,used,162,516.0,5.4
+2026-01,Honda,Kinh doanh vận tải,used,2,395.0,6.5
+2026-01,Honda,Taxi,used,3,500.0,4.0
+2026-01,Hyundai,Không kinh doanh,new,107,523.0,0.0
+2026-01,Hyundai,Không kinh doanh,used,353,450.0,4.6
+2026-01,Hyundai,Kinh doanh vận tải,new,4,509.0,0.0
+2026-01,Hyundai,Kinh doanh vận tải,used,24,640.0,5.3
+2026-01,Hyundai,Taxi,new,1,489.0,0.0
+2026-01,Kia,Không kinh doanh,new,52,595.0,0.0
+2026-01,Kia,Không kinh doanh,used,276,510.0,4.4
+2026-01,Kia,Kinh doanh vận tải,new,2,607.0,0.0
+2026-01,Kia,Kinh doanh vận tải,used,1,510.0,2.0
+2026-01,MG,Không kinh doanh,new,50,445.0,0.1
+2026-01,MG,Không kinh doanh,used,59,410.0,2.3
+2026-01,MG,Kinh doanh vận tải,new,3,424.0,0.3
+2026-01,MG,Taxi,new,1,406.0,1.0
+2026-01,Mazda,Không kinh doanh,new,40,661.5,0.0
+2026-01,Mazda,Không kinh doanh,used,223,530.0,4.6
+2026-01,Mazda,Kinh doanh vận tải,used,1,376.0,2.0
+2026-01,Mercedes Benz,Không kinh doanh,used,23,980.0,6.7
+2026-01,Mitsubishi,Không kinh doanh,new,83,578.0,0.0
+2026-01,Mitsubishi,Không kinh doanh,used,183,470.0,3.9
+2026-01,Mitsubishi,Kinh doanh vận tải,new,3,580.0,0.0
+2026-01,Mitsubishi,Kinh doanh vận tải,used,33,450.0,4.2
+2026-01,Mitsubishi,Taxi,used,3,500.0,1.7
+2026-01,Peugeot,Không kinh doanh,used,11,680.0,5.3
+2026-01,Suzuki,Không kinh doanh,new,3,529.9,0.0
+2026-01,Suzuki,Không kinh doanh,used,44,430.0,3.9
+2026-01,Suzuki,Kinh doanh vận tải,new,1,524.9,0.0
+2026-01,Suzuki,Kinh doanh vận tải,used,5,430.0,3.6
+2026-01,Toyota,Không kinh doanh,new,80,558.0,0.0
+2026-01,Toyota,Không kinh doanh,used,414,460.0,6.5
+2026-01,Toyota,Kinh doanh vận tải,used,18,407.5,5.1
+2026-01,Toyota,Taxi,used,9,450.0,3.7
+2026-01,VinFast,Không kinh doanh,new,258,297.6,0.0
+2026-01,VinFast,Không kinh doanh,used,247,301.0,2.0
+2026-01,VinFast,Kinh doanh vận tải,new,174,675.6,0.0
+2026-01,VinFast,Kinh doanh vận tải,used,86,647.9,1.3
+2026-01,VinFast,Taxi,new,13,689.1,0.0
+2026-01,VinFast,Taxi,used,92,450.0,1.7
+2026-02,BYD,Không kinh doanh,new,13,899.0,0.0
+2026-02,BYD,Không kinh doanh,used,2,685.0,1.0
+2026-02,BYD,Kinh doanh vận tải,used,2,700.0,1.0
+2026-02,Ford,Không kinh doanh,new,20,951.0,0.0
+2026-02,Ford,Không kinh doanh,used,60,798.0,3.9
+2026-02,Ford,Kinh doanh vận tải,used,7,435.0,5.7
+2026-02,Honda,Không kinh doanh,new,2,603.8,0.0
+2026-02,Honda,Không kinh doanh,used,96,578.5,4.0
+2026-02,Honda,Kinh doanh vận tải,used,2,370.5,6.0
+2026-02,Hyundai,Không kinh doanh,new,72,555.0,0.0
+2026-02,Hyundai,Không kinh doanh,used,211,430.0,4.6
+2026-02,Hyundai,Kinh doanh vận tải,used,17,450.0,4.8
+2026-02,Kia,Không kinh doanh,new,60,637.0,0.0
+2026-02,Kia,Không kinh doanh,used,152,510.0,4.6
+2026-02,Kia,Kinh doanh vận tải,used,2,375.5,7.5
+2026-02,MG,Không kinh doanh,new,24,433.8,0.3
+2026-02,MG,Không kinh doanh,used,26,410.0,2.0
+2026-02,MG,Kinh doanh vận tải,new,3,330.0,0.3
+2026-02,MG,Kinh doanh vận tải,used,1,351.0,4.0
+2026-02,Mazda,Không kinh doanh,new,42,609.0,0.0
+2026-02,Mazda,Không kinh doanh,used,118,509.0,5.7
+2026-02,Mercedes Benz,Không kinh doanh,used,18,1000.0,8.3
+2026-02,Mitsubishi,Không kinh doanh,new,47,601.0,0.0
+2026-02,Mitsubishi,Không kinh doanh,used,123,510.0,3.9
+2026-02,Mitsubishi,Kinh doanh vận tải,new,3,629.7,0.0
+2026-02,Mitsubishi,Kinh doanh vận tải,used,24,450.0,3.5
+2026-02,Mitsubishi,Taxi,new,2,570.0,0.5
+2026-02,Mitsubishi,Taxi,used,2,415.0,4.0
+2026-02,Peugeot,Không kinh doanh,new,1,875.0,0.0
+2026-02,Peugeot,Không kinh doanh,used,10,745.0,4.1
+2026-02,Suzuki,Không kinh doanh,new,4,535.9,0.0
+2026-02,Suzuki,Không kinh doanh,used,26,450.0,3.3
+2026-02,Suzuki,Kinh doanh vận tải,used,1,450.0,3.0
+2026-02,Suzuki,Taxi,used,1,400.0,3.0
+2026-02,Toyota,Không kinh doanh,new,43,538.2,0.0
+2026-02,Toyota,Không kinh doanh,used,244,450.0,6.7
+2026-02,Toyota,Kinh doanh vận tải,new,1,660.0,0.0
+2026-02,Toyota,Kinh doanh vận tải,used,19,450.0,6.0
+2026-02,Toyota,Taxi,used,14,485.0,3.0
+2026-02,VinFast,Không kinh doanh,new,185,297.6,0.0
+2026-02,VinFast,Không kinh doanh,used,136,320.0,2.4
+2026-02,VinFast,Kinh doanh vận tải,new,108,669.4,0.0
+2026-02,VinFast,Kinh doanh vận tải,used,38,481.1,1.2
+2026-02,VinFast,Taxi,new,14,584.6,0.1
+2026-02,VinFast,Taxi,used,46,447.0,1.4
+2026-03,BYD,Không kinh doanh,new,20,889.2,0.1
+2026-03,BYD,Không kinh doanh,used,3,680.0,1.0
+2026-03,BYD,Kinh doanh vận tải,new,6,741.0,0.0
+2026-03,BYD,Kinh doanh vận tải,used,2,718.0,1.0
+2026-03,BYD,Taxi,used,1,700.0,1.0
+2026-03,Ford,Không kinh doanh,new,24,1169.0,0.2
+2026-03,Ford,Không kinh doanh,used,59,790.0,4.2
+2026-03,Ford,Kinh doanh vận tải,new,1,1041.0,0.0
+2026-03,Ford,Kinh doanh vận tải,used,14,615.5,5.4
+2026-03,Honda,Không kinh doanh,new,7,540.6,0.1
+2026-03,Honda,Không kinh doanh,used,92,500.0,4.8
+2026-03,Honda,Kinh doanh vận tải,used,4,350.0,6.3
+2026-03,Hyundai,Không kinh doanh,new,79,569.0,0.0
+2026-03,Hyundai,Không kinh doanh,used,263,440.0,4.5
+2026-03,Hyundai,Kinh doanh vận tải,new,6,521.5,0.0
+2026-03,Hyundai,Kinh doanh vận tải,used,14,435.0,4.3
+2026-03,Hyundai,Taxi,used,1,250.0,4.0
+2026-03,Kia,Không kinh doanh,new,46,629.0,0.0
+2026-03,Kia,Không kinh doanh,used,168,510.0,4.5
+2026-03,Kia,Kinh doanh vận tải,new,3,629.0,0.0
+2026-03,Kia,Kinh doanh vận tải,used,6,625.0,4.5
+2026-03,MG,Không kinh doanh,new,9,471.0,0.2
+2026-03,MG,Không kinh doanh,used,31,400.0,2.1
+2026-03,MG,Kinh doanh vận tải,new,1,325.0,1.0
+2026-03,MG,Kinh doanh vận tải,used,4,325.0,1.5
+2026-03,MG,Taxi,used,1,420.0,1.0
+2026-03,Mazda,Không kinh doanh,new,40,605.5,0.1
+2026-03,Mazda,Không kinh doanh,used,134,510.0,5.2
+2026-03,Mazda,Kinh doanh vận tải,used,1,420.0,4.0
+2026-03,Mercedes Benz,Không kinh doanh,used,18,925.0,8.2
+2026-03,Mitsubishi,Không kinh doanh,new,84,579.5,0.0
+2026-03,Mitsubishi,Không kinh doanh,used,131,487.5,3.9
+2026-03,Mitsubishi,Kinh doanh vận tải,new,9,578.0,0.1
+2026-03,Mitsubishi,Kinh doanh vận tải,used,51,463.0,3.0
+2026-03,Mitsubishi,Taxi,new,8,583.0,0.0
+2026-03,Mitsubishi,Taxi,used,2,490.0,1.5
+2026-03,Peugeot,Không kinh doanh,new,2,1011.5,0.0
+2026-03,Peugeot,Không kinh doanh,used,10,700.0,4.4
+2026-03,Suzuki,Không kinh doanh,used,31,440.0,3.5
+2026-03,Suzuki,Kinh doanh vận tải,new,1,569.9,0.0
+2026-03,Suzuki,Kinh doanh vận tải,used,5,440.0,3.6
+2026-03,Suzuki,Taxi,used,1,340.0,6.0
+2026-03,Toyota,Không kinh doanh,new,87,600.0,0.0
+2026-03,Toyota,Không kinh doanh,used,299,470.0,6.1
+2026-03,Toyota,Kinh doanh vận tải,new,3,602.0,0.0
+2026-03,Toyota,Kinh doanh vận tải,used,36,500.0,3.5
+2026-03,Toyota,Taxi,used,14,465.0,3.2
+2026-03,VinFast,Không kinh doanh,new,350,312.0,0.0
+2026-03,VinFast,Không kinh doanh,used,187,320.0,2.2
+2026-03,VinFast,Kinh doanh vận tải,new,295,680.1,0.0
+2026-03,VinFast,Kinh doanh vận tải,used,46,480.0,1.3
+2026-03,VinFast,Taxi,new,28,629.3,0.1
+2026-03,VinFast,Taxi,used,73,460.0,1.0
+2026-04,BYD,Không kinh doanh,new,14,889.2,0.0
+2026-04,BYD,Không kinh doanh,used,2,740.0,1.0
+2026-04,BYD,Kinh doanh vận tải,new,8,726.0,0.0
+2026-04,Ford,Không kinh doanh,new,16,978.5,0.1
+2026-04,Ford,Không kinh doanh,used,55,800.0,4.0
+2026-04,Ford,Kinh doanh vận tải,new,2,1255.5,0.0
+2026-04,Ford,Kinh doanh vận tải,used,13,630.0,4.4
+2026-04,Honda,Không kinh doanh,new,19,697.0,0.0
+2026-04,Honda,Không kinh doanh,used,74,500.0,5.2
+2026-04,Honda,Kinh doanh vận tải,used,2,500.0,7.0
+2026-04,Hyundai,Không kinh doanh,new,75,529.0,0.0
+2026-04,Hyundai,Không kinh doanh,used,200,450.0,4.4
+2026-04,Hyundai,Kinh doanh vận tải,new,1,1040.0,0.0
+2026-04,Hyundai,Kinh doanh vận tải,used,18,500.0,4.3
+2026-04,Kia,Không kinh doanh,new,63,626.0,0.0
+2026-04,Kia,Không kinh doanh,used,144,530.0,4.1
+2026-04,Kia,Kinh doanh vận tải,used,7,580.0,3.1
+2026-04,MG,Không kinh doanh,new,21,445.0,0.1
+2026-04,MG,Không kinh doanh,used,35,405.0,2.4
+2026-04,MG,Kinh doanh vận tải,new,2,488.5,0.0
+2026-04,MG,Kinh doanh vận tải,used,1,370.0,1.0
+2026-04,MG,Taxi,used,1,470.0,2.0
+2026-04,Mazda,Không kinh doanh,new,42,690.5,0.0
+2026-04,Mazda,Không kinh doanh,used,171,520.0,4.7
+2026-04,Mazda,Kinh doanh vận tải,used,3,520.0,3.0
+2026-04,Mercedes Benz,Không kinh doanh,used,6,1100.0,5.7
+2026-04,Mitsubishi,Không kinh doanh,new,90,562.0,0.0
+2026-04,Mitsubishi,Không kinh doanh,used,131,465.0,3.4
+2026-04,Mitsubishi,Kinh doanh vận tải,new,14,593.5,0.0
+2026-04,Mitsubishi,Kinh doanh vận tải,used,48,467.5,3.4
+2026-04,Mitsubishi,Taxi,new,6,569.5,0.0
+2026-04,Mitsubishi,Taxi,used,1,490.0,1.0
+2026-04,Peugeot,Không kinh doanh,used,10,655.0,4.8
+2026-04,Suzuki,Không kinh doanh,new,4,543.9,0.0
+2026-04,Suzuki,Không kinh doanh,used,25,420.0,4.3
+2026-04,Suzuki,Kinh doanh vận tải,used,5,470.0,3.6
+2026-04,Toyota,Không kinh doanh,new,71,621.0,0.0
+2026-04,Toyota,Không kinh doanh,used,252,472.5,5.5
+2026-04,Toyota,Kinh doanh vận tải,new,2,651.5,0.0
+2026-04,Toyota,Kinh doanh vận tải,used,40,455.0,3.8
+2026-04,Toyota,Taxi,new,1,730.0,0.0
+2026-04,Toyota,Taxi,used,3,470.0,2.3
+2026-04,VinFast,Cho thuê tự lái,new,2,268.8,0.0
+2026-04,VinFast,Không kinh doanh,new,538,454.9,0.0
+2026-04,VinFast,Không kinh doanh,used,139,440.0,2.3
+2026-04,VinFast,Kinh doanh vận tải,new,311,669.6,0.0
+2026-04,VinFast,Kinh doanh vận tải,used,39,440.0,1.3
+2026-04,VinFast,Taxi,new,29,669.0,0.0
+2026-04,VinFast,Taxi,used,42,442.8,1.3
+2026-05,BYD,Không kinh doanh,new,12,916.0,0.0
+2026-05,BYD,Không kinh doanh,used,3,860.0,1.0
+2026-05,BYD,Kinh doanh vận tải,new,7,726.0,0.0
+2026-05,BYD,Kinh doanh vận tải,used,1,700.0,1.0
+2026-05,Ford,Không kinh doanh,new,24,1186.5,0.0
+2026-05,Ford,Không kinh doanh,used,65,760.0,3.8
+2026-05,Ford,Kinh doanh vận tải,new,4,956.5,0.0
+2026-05,Ford,Kinh doanh vận tải,used,17,500.0,5.2
+2026-05,Honda,Không kinh doanh,new,8,607.0,0.0
+2026-05,Honda,Không kinh doanh,used,99,510.0,5.0
+2026-05,Honda,Kinh doanh vận tải,used,1,580.0,1.0
+2026-05,Hyundai,Không kinh doanh,new,67,562.0,0.0
+2026-05,Hyundai,Không kinh doanh,used,198,480.0,4.3
+2026-05,Hyundai,Kinh doanh vận tải,new,4,551.5,0.0
+2026-05,Hyundai,Kinh doanh vận tải,used,20,585.0,2.7
+2026-05,Hyundai,Taxi,new,1,536.0,0.0
+2026-05,Hyundai,Taxi,used,1,450.0,3.0
+2026-05,Kia,Không kinh doanh,new,53,611.0,0.0
+2026-05,Kia,Không kinh doanh,used,147,520.0,4.0
+2026-05,Kia,Kinh doanh vận tải,used,1,550.0,1.0
+2026-05,MG,Không kinh doanh,new,11,435.0,0.0
+2026-05,MG,Không kinh doanh,used,27,400.0,2.4
+2026-05,MG,Kinh doanh vận tải,new,2,453.0,0.5
+2026-05,MG,Kinh doanh vận tải,used,5,400.0,1.6
+2026-05,MG,Taxi,used,1,320.0,1.0
+2026-05,Mazda,Không kinh doanh,new,31,606.0,0.0
+2026-05,Mazda,Không kinh doanh,used,146,520.0,4.9
+2026-05,Mazda,Taxi,used,1,320.0,10.0
+2026-05,Mercedes Benz,Không kinh doanh,used,13,1000.0,6.5
+2026-05,Mitsubishi,Không kinh doanh,new,74,565.9,0.0
+2026-05,Mitsubishi,Không kinh doanh,used,131,450.0,3.7
+2026-05,Mitsubishi,Kinh doanh vận tải,new,13,573.0,0.0
+2026-05,Mitsubishi,Kinh doanh vận tải,used,38,500.0,2.4
+2026-05,Mitsubishi,Taxi,new,1,581.0,0.0
+2026-05,Mitsubishi,Taxi,used,4,335.0,3.3
+2026-05,Peugeot,Không kinh doanh,used,6,585.0,7.0
+2026-05,Suzuki,Không kinh doanh,new,1,569.9,0.0
+2026-05,Suzuki,Không kinh doanh,used,18,435.0,3.7
+2026-05,Suzuki,Kinh doanh vận tải,used,7,440.0,2.9
+2026-05,Toyota,Không kinh doanh,new,75,628.0,0.0
+2026-05,Toyota,Không kinh doanh,used,289,480.0,5.5
+2026-05,Toyota,Kinh doanh vận tải,new,1,580.0,0.0
+2026-05,Toyota,Kinh doanh vận tải,used,27,470.0,3.7
+2026-05,Toyota,Taxi,used,8,480.0,2.6
+2026-05,VinFast,Không kinh doanh,new,381,296.1,0.0
+2026-05,VinFast,Không kinh doanh,used,137,300.0,2.1
+2026-05,VinFast,Kinh doanh vận tải,new,241,672.5,0.0
+2026-05,VinFast,Kinh doanh vận tải,used,43,440.0,1.3
+2026-05,VinFast,Taxi,new,53,654.6,0.0
+2026-05,VinFast,Taxi,used,69,470.0,1.1
+2026-06,BYD,Không kinh doanh,new,14,785.4,0.0
+2026-06,BYD,Không kinh doanh,used,3,700.0,1.0
+2026-06,BYD,Kinh doanh vận tải,new,3,730.0,0.0
+2026-06,BYD,Kinh doanh vận tải,used,2,758.5,1.0
+2026-06,BYD,Taxi,new,2,746.0,0.0
+2026-06,Ford,Không kinh doanh,new,11,806.0,0.0
+2026-06,Ford,Không kinh doanh,used,81,745.0,4.4
+2026-06,Ford,Kinh doanh vận tải,new,3,1041.0,0.3
+2026-06,Ford,Kinh doanh vận tải,used,22,618.0,3.6
+2026-06,Honda,Không kinh doanh,new,17,597.6,0.0
+2026-06,Honda,Không kinh doanh,used,92,550.0,4.3
+2026-06,Honda,Kinh doanh vận tải,used,1,340.0,7.0
+2026-06,Hyundai,Không kinh doanh,new,63,578.0,0.0
+2026-06,Hyundai,Không kinh doanh,used,226,450.0,4.4
+2026-06,Hyundai,Kinh doanh vận tải,new,4,543.0,0.0
+2026-06,Hyundai,Kinh doanh vận tải,used,12,525.5,4.8
+2026-06,Hyundai,Taxi,used,1,440.0,1.0
+2026-06,Kia,Không kinh doanh,new,59,608.0,0.0
+2026-06,Kia,Không kinh doanh,used,137,520.0,4.1
+2026-06,Kia,Kinh doanh vận tải,used,4,965.0,1.5
+2026-06,Kia,Taxi,used,1,620.0,3.0
+2026-06,MG,Không kinh doanh,new,18,424.0,0.1
+2026-06,MG,Không kinh doanh,used,44,403.0,2.6
+2026-06,MG,Kinh doanh vận tải,new,2,478.5,0.0
+2026-06,MG,Kinh doanh vận tải,used,2,310.0,1.0
+2026-06,MG,Taxi,used,6,300.0,2.0
+2026-06,Mazda,Không kinh doanh,new,20,599.0,0.0
+2026-06,Mazda,Không kinh doanh,used,141,500.0,4.9
+2026-06,Mercedes Benz,Không kinh doanh,used,15,880.0,7.1
+2026-06,Mitsubishi,Không kinh doanh,new,85,585.6,0.0
+2026-06,Mitsubishi,Không kinh doanh,used,129,500.0,3.3
+2026-06,Mitsubishi,Kinh doanh vận tải,new,4,602.5,0.0
+2026-06,Mitsubishi,Kinh doanh vận tải,used,24,405.0,4.3
+2026-06,Mitsubishi,Taxi,new,4,560.0,0.5
+2026-06,Mitsubishi,Taxi,used,22,450.0,1.1
+2026-06,Peugeot,Không kinh doanh,used,11,720.0,4.5
+2026-06,Suzuki,Không kinh doanh,new,3,559.9,0.0
+2026-06,Suzuki,Không kinh doanh,used,19,420.0,3.7
+2026-06,Suzuki,Kinh doanh vận tải,used,6,410.0,4.0
+2026-06,Suzuki,Taxi,used,1,430.0,3.0
+2026-06,Toyota,Không kinh doanh,new,59,625.0,0.0
+2026-06,Toyota,Không kinh doanh,used,295,490.0,5.7
+2026-06,Toyota,Kinh doanh vận tải,new,1,823.0,0.0
+2026-06,Toyota,Kinh doanh vận tải,used,22,500.0,3.9
+2026-06,Toyota,Taxi,used,4,500.0,2.0
+2026-06,VinFast,Cho thuê tự lái,new,1,482.6,0.0
+2026-06,VinFast,Cho thuê tự lái,used,1,270.0,1.0
+2026-06,VinFast,Không kinh doanh,new,448,303.0,0.0
+2026-06,VinFast,Không kinh doanh,used,208,355.0,2.2
+2026-06,VinFast,Kinh doanh vận tải,new,309,671.0,0.0
+2026-06,VinFast,Kinh doanh vận tải,used,39,460.0,1.3
+2026-06,VinFast,Taxi,new,77,529.0,0.0
+2026-06,VinFast,Taxi,used,60,440.0,1.1

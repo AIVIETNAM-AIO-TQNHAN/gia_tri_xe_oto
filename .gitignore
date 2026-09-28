@@ -1,0 +1,15 @@
+# Dữ liệu sinh ra khi chạy pipeline — dựng lại được từ landing
+data/bronze/
+data/silver/
+data/gold/
+data/control/
+
+# Bản CSV của mart_ml_training (~3,7 MB, 1 dòng / hợp đồng) — dựng lại được bằng python -m src.gold
+output/mart_ml_training.csv
+
+# Rác
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+~$*.xlsx

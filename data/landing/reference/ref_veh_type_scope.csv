@@ -1,0 +1,43 @@
+﻿VEH_TYPE,mo_ta,trong_pham_vi
+KKD1,Non Commercial Motor Vehicle(0-16),1
+KKD1-1,Non Commercial Motor Vehicle (0-5),1
+KKD1-2,Non Commercial Motor Vehicle (6-8),1
+KKD3,Non Commercial Motor Vehicle (>16),1
+TAXI,Taxi truyền thống,1
+TAXI-1,Xe taxi truyền thống (≤ 5 chỗ),1
+TAXI-2,Xe taxi công nghệ,1
+XEKD1,Commercial car (others),1
+XEKD2,Commercial Motor Vehicle,1
+XTTL,Self-drive rental car (incl. Grab),1
+BUYT,Bus,0
+KKD2,Non Commercial Pickup Truck,0
+KKD2-1,Other Non Commercial Pickup Truck,0
+KKD4,"Xe hoạt động trong nội cảng, khu công nghiệp, sân bay",0
+TAI1,Truck,0
+TAI1-1,Truck,0
+TAI1-2,Truck,0
+TAI1-3,Truck,0
+TAI2,Refrigerated Truck,0
+TAI3,Truck,0
+TAI4,Truck,0
+XCC,Ambulance,0
+XCD1,Special purpose vehicle,0
+XCD2,Trailer truck,0
+XCD3,Rơ mooc,0
+XCD3-1,Rơ mooc tự đổ,0
+XCD3-2,Rơ mooc có gắn thiết bị chuyên dụng,0
+XCT,Special purpose vehicle (money),0
+XEKD,Commercial Motor Vehicle,0
+XGM001,Motorbike,0
+XGM002,Scooter,0
+XGM1,Motorcycle Two-wheeler <= 50 CC,0
+XGM2,Motorcycle Two-wheeler > 50 CC,0
+XGM3,Tricycle,0
+XGM4,Special Purpose Motorcycle,0
+XGM5,Electric motorcycle,0
+XGM6,Other vehicles,0
+XGM_BK,Bảng kê XGM,0
+XTL1,Learner vehicle (car),0
+XTL2,Learner vehicle (truck),0
+XTL3,Learner vehicle (pickup),0
+XTL4,Learner vehicle (container),0
