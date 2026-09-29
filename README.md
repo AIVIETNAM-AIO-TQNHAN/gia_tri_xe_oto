@@ -58,3 +58,4 @@ Bản CSV của Gold nằm ở `output/`, mở được bằng Excel (`mart_ml_t
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Luồng dữ liệu, star schema (ERD), grain, luật quarantine, các quyết định thiết kế |
 | [docs/DATA_CONTRACT.md](docs/DATA_CONTRACT.md) | File bàn giao: 16 cột, manifest, 5 luật cổng kiểm tra |
 | [docs/KIEN_THUC.md](docs/KIEN_THUC.md) | Khái niệm → chỗ nằm trong code · 13 câu hỏi tự kiểm tra · bài tập mở rộng |
+| [docs/OUTLINE.md](docs/OUTLINE.md) | Khung 26 slide trình bày theo template AIO, số đo điền sẵn, ô 【bạn viết】 cho phần nhận định |
