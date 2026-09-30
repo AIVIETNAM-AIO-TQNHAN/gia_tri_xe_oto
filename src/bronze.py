@@ -1,15 +1,16 @@
-"""Landing -> Bronze: nạp incremental + idempotent (README §3).
+"""Landing -> Bronze: batch ingestion theo kiểu incremental + idempotent (README §3).
 
-Mỗi lô:  Cổng kiểm tra -> đã có trong sổ? bỏ qua -> đọc CSV (mọi cột string)
-         -> gắn cột kỹ thuật -> GHI BRONZE -> rồi mới GHI SỔ loaded_batches.
+Mỗi batch:  batch-level validation -> đã có trong sổ batch? bỏ qua -> đọc CSV (mọi cột kiểu string)
+            -> bổ sung technical column -> GHI BRONZE -> rồi mới GHI SỔ BATCH loaded_batches.
 
-Vì sao ghi Bronze TRƯỚC rồi mới ghi sổ:
-  - Ghi sổ trước mà Bronze lỗi  -> lô bị coi là đã nạp, MẤT VĨNH VIỄN khỏi pipeline.
-  - Ghi Bronze trước mà sổ lỗi  -> lần sau nạp lại lô đó thành bản trùng. Không mất dữ liệu,
-    và Silver vẫn chỉ đọc một bản (bản có _ingest_ts mới nhất của tháng) nên kết quả không đổi.
+Vì sao ghi Bronze TRƯỚC rồi mới ghi sổ batch:
+  - Ghi sổ trước mà Bronze lỗi  -> batch bị coi là đã ingest, MẤT VĨNH VIỄN khỏi pipeline.
+  - Ghi Bronze trước mà sổ lỗi  -> lần sau batch đó được ingest lại thành bản trùng. Không mất dữ
+    liệu, và Silver vẫn chỉ đọc một bản (bản có _ingest_ts mới nhất của tháng) nên kết quả không đổi.
 
-Vì sao đọc mọi cột dạng string: Bronze giữ NGUYÊN TRẠNG. Ép kiểu ở đây thì giá trị sai kiểu
-thành null và mất luôn dấu vết giá trị gốc — việc parse là của Silver, nơi dòng lỗi có quarantine.
+Vì sao đọc mọi cột dạng string: Bronze giữ NGUYÊN TRẠNG dữ liệu thô. Nếu cast kiểu tại đây, giá trị
+sai kiểu sẽ thành null và mất luôn dấu vết giá trị gốc — việc parse thuộc về Silver, nơi record lỗi
+được đưa vào quarantine.
 
 Chạy:  python -m src.bronze
 """
@@ -29,11 +30,11 @@ from src.validate import list_batches, load_manifest, partition_value, validate_
 
 log = logging.getLogger("bronze")
 
-CORRUPT_COL = "_corrupt_record"      # dòng vỡ cột vẫn vào Bronze, không mất
+CORRUPT_COL = "_corrupt_record"      # record vỡ cột vẫn được ghi vào Bronze, không bị mất
 CONTROL_COLUMNS = ["batch_id", "as_of_month", "row_count", "ingest_ts", "source_file"]
 
 
-# ---- Sổ lô đã nạp ------------------------------------------------------------------
+# ---- Sổ batch (batch log) đã ingest ------------------------------------------------
 def read_loaded_batch_ids(control_file: Path) -> set[str]:
     if not control_file.exists():
         return set()
@@ -51,12 +52,12 @@ def append_loaded_batch(control_file: Path, row: dict) -> None:
         writer.writerow(row)
 
 
-# ---- Đọc một lô -----------------------------------------------------------------------
+# ---- Đọc một batch --------------------------------------------------------------------
 def read_batch(spark: SparkSession, data_file: Path, manifest: dict) -> DataFrame:
-    """CSV -> DataFrame toàn string.
+    """CSV -> DataFrame với mọi cột kiểu string.
 
-    Spark áp schema CSV THEO VỊ TRÍ cột, nên schema phải dựng từ header THẬT của file (đọc bằng
-    Python, encoding utf-8-sig tự bỏ BOM) chứ không lấy từ danh sách cột mong đợi.
+    Spark áp schema CSV THEO VỊ TRÍ cột, nên schema phải được dựng từ header THỰC TẾ của tệp (đọc
+    bằng Python, encoding utf-8-sig tự loại bỏ BOM) chứ không lấy từ danh sách cột mong đợi.
     """
     with open(data_file, newline="", encoding=manifest["encoding"]) as f:
         header = next(csv.reader(f, delimiter=manifest["delimiter"]))
@@ -65,9 +66,9 @@ def read_batch(spark: SparkSession, data_file: Path, manifest: dict) -> DataFram
             .schema(schema)
             .option("header", True)
             .option("sep", manifest["delimiter"])
-            .option("encoding", "UTF-8")          # Spark không biết 'utf-8-sig'; BOM nằm ở dòng header đã bỏ
+            .option("encoding", "UTF-8")          # Spark không hỗ trợ 'utf-8-sig'; BOM nằm ở dòng header đã bị bỏ qua
             .option("quote", '"')
-            .option("escape", '"')                # contract: "" trong chuỗi; mặc định của Spark là \
+            .option("escape", '"')                # data contract: escape "" trong chuỗi; mặc định của Spark là \
             .option("mode", "PERMISSIVE")
             .option("columnNameOfCorruptRecord", CORRUPT_COL)
             .csv(data_file.as_posix()))
@@ -86,8 +87,8 @@ def ingest_batch(spark: SparkSession, partition_dir: Path, bronze_dir: Path, con
     ingest_ts = datetime.now(ZoneInfo("Asia/Ho_Chi_Minh")).replace(microsecond=0)
 
     df = (read_batch(spark, data_file, manifest)
-          # Cột partition lấy từ tên thư mục (Cổng kiểm tra đã bảo đảm trùng với cột trong file) —
-          # để dòng vỡ cột (as_of_month null) không rơi vào partition __HIVE_DEFAULT_PARTITION__.
+          # Cột partition lấy từ tên thư mục (batch-level validation đã bảo đảm khớp với cột trong tệp) —
+          # để record vỡ cột (as_of_month null) không rơi vào partition __HIVE_DEFAULT_PARTITION__.
           .withColumn(PARTITION_COL, F.lit(partition_value(partition_dir)))
           .withColumn("_batch_id", F.lit(manifest["batch_id"]))
           .withColumn("_source_file", F.lit(relative(data_file)))
@@ -96,7 +97,7 @@ def ingest_batch(spark: SparkSession, partition_dir: Path, bronze_dir: Path, con
     row_count = df.count()
     df.write.mode("append").partitionBy(PARTITION_COL).parquet(bronze_dir.as_posix())
 
-    append_loaded_batch(control_file, {           # chỉ ghi sổ khi Bronze đã ghi xong
+    append_loaded_batch(control_file, {           # chỉ ghi sổ batch khi Bronze đã ghi xong
         "batch_id": manifest["batch_id"],
         "as_of_month": partition_value(partition_dir),
         "row_count": row_count,
@@ -108,7 +109,7 @@ def ingest_batch(spark: SparkSession, partition_dir: Path, bronze_dir: Path, con
 
 def run(spark: SparkSession, landing_dir: Path = LANDING_DIR, bronze_dir: Path = BRONZE_DIR,
         control_file: Path = LOADED_BATCHES) -> dict[str, list[str]]:
-    """Nạp mọi lô mới. Một lô bị từ chối/lỗi không chặn các lô khác."""
+    """Ingest mọi batch mới. Một batch bị reject/lỗi không ngăn cản việc ingest các batch khác."""
     result = {"loaded": [], "skipped": [], "rejected": [], "failed": []}
     loaded_ids = read_loaded_batch_ids(control_file)
 
@@ -128,15 +129,15 @@ def run(spark: SparkSession, landing_dir: Path = LANDING_DIR, bronze_dir: Path =
 
         try:
             n = ingest_batch(spark, partition_dir, bronze_dir, control_file)
-        except Exception as e:                      # lô này hỏng, lô khác vẫn nạp
-            log.error("LỖI     %s: %s", partition_dir.name, e)
+        except Exception as e:                      # batch này lỗi, các batch khác vẫn được ingest
+            log.error("FAILED  %s: %s", partition_dir.name, e)
             result["failed"].append(partition_dir.name)
             continue
         loaded_ids.add(batch_id)
         result["loaded"].append(batch_id)
-        log.info("NẠP     %s  %6d dòng  (batch_id=%s)", partition_dir.name, n, batch_id)
+        log.info("INGEST  %s  %6d record  (batch_id=%s)", partition_dir.name, n, batch_id)
 
-    log.info("Bronze: %d lô nạp mới, bỏ qua %d lô đã nạp, %d bị từ chối, %d lỗi",
+    log.info("Bronze: %d batch ingest mới, bỏ qua %d batch đã ingest, %d bị reject, %d lỗi",
              len(result["loaded"]), len(result["skipped"]), len(result["rejected"]), len(result["failed"]))
     return result
 

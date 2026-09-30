@@ -1,20 +1,20 @@
-"""Bronze -> Silver: làm sạch + dựng STAR SCHEMA (README §4, §5.2).
+"""Bronze -> Silver: làm sạch dữ liệu + xây dựng STAR SCHEMA (README §4, §5.2).
 
-                        dim_date (x2: ngày duyệt, ngày hiệu lực)
+                        dim_date (role-playing x2: ngày duyệt, ngày hiệu lực)
                             |
     dim_model ---- fact_valuation ---- dim_vehicle_type
-                   (1 dòng = 1 hợp đồng định giá)
+                   (grain: 1 record = 1 hợp đồng định giá)
 
 Các bước:
-  1. Chọn lô ACTIVE trong Bronze: mỗi tháng lấy bản nạp mới nhất (_ingest_ts lớn nhất).
-  2. Dựng dim_model, dim_vehicle_type từ bảng ref_*.
-  3. Parse cột thô (string) sang đúng kiểu, tra dimension lấy khoá thay thế.
-  4. Gán rule_id cho dòng vi phạm -> tách: dòng sạch vào fact, dòng lỗi vào quarantine.
-  5. Dựng dim_date phủ đủ khoảng ngày của fact.
-  6. Đối soát: fact + quarantine = Bronze active. Lệch là dừng job.
+  1. Chọn batch ACTIVE trong Bronze: mỗi tháng lấy lần ingest mới nhất (_ingest_ts lớn nhất).
+  2. Xây dựng dim_model, dim_vehicle_type từ reference data ref_*.
+  3. Parse cột thô (string) sang đúng kiểu, lookup dimension để lấy surrogate key.
+  4. Gán rule_id cho record vi phạm -> phân tách: record hợp lệ vào fact, record lỗi vào quarantine.
+  5. Xây dựng dim_date bao phủ toàn bộ khoảng ngày của fact.
+  6. Đối soát (reconciliation): fact + quarantine = Bronze active. Lệch thì dừng job (fail fast).
 
-Silver ghi FULL REFRESH (mode overwrite) mỗi lần chạy: dữ liệu nhỏ, và chạy lại bao nhiêu lần
-cũng ra đúng một kết quả — idempotent mà không cần logic merge.
+Silver được ghi theo cơ chế FULL REFRESH (mode overwrite) ở mỗi lần thực thi: dữ liệu nhỏ, và re-run
+bao nhiêu lần cũng cho cùng một kết quả — idempotent mà không cần logic merge.
 
 Chạy:  python -m src.silver
 """
@@ -35,33 +35,34 @@ log = logging.getLogger("silver")
 
 CORRUPT_COL = "_corrupt_record"
 
-# Thứ tự ưu tiên: một dòng dính nhiều luật chỉ ghi luật ĐẦU TIÊN, để mỗi dòng Bronze ra đúng một
-# dòng quarantine và đếm theo rule_id cộng lại bằng tổng số dòng bị tách.
+# Thứ tự ưu tiên: một record vi phạm nhiều rule chỉ ghi nhận rule ĐẦU TIÊN, để mỗi record Bronze sinh
+# ra đúng một record quarantine và tổng số đếm theo rule_id bằng đúng tổng số record bị tách ra.
+# Thứ tự: lỗi cấu trúc (structural) -> lỗi tham chiếu (referential) -> lỗi miền giá trị (domain).
 RULES = {
-    "CORRUPT_RECORD":     "dòng vỡ cột, không đọc được",
-    "DUP_KEY":            "ma_dinh_gia rỗng hoặc trùng (giữ 1 dòng, các dòng thua vào đây)",
-    "MISSING_FIELD":      "rỗng ở ma_dong_xe / nam_san_xuat / so_cho_ngoi",
-    "DATE_INVALID":       "ngày sai dạng · hieu_luc_den < hieu_luc_tu · hieu_luc_tu lệch ngay_duyet quá 1 năm",
-    "OUT_OF_SCOPE":       "nhom_xe không có trong dim_vehicle_type hoặc ngoài phạm vi ô tô con",
-    "MODEL_CODE_UNKNOWN": "ma_dong_xe không có trong ref_model_map",
-    "VALUE_INVALID":      "nam_san_xuat / so_cho_ngoi / loai_dinh_gia ngoài miền hợp lệ",
-    "PRICE_INVALID":      "gia_tri_dinh_gia sai dạng hoặc ngoài [50 triệu, 50 tỷ] VND",
+    "CORRUPT_RECORD":     "record vỡ cột, không parse được",
+    "DUP_KEY":            "ma_dinh_gia rỗng hoặc trùng lặp (giữ 1 record, các record còn lại vào đây)",
+    "MISSING_FIELD":      "rỗng tại ma_dong_xe / nam_san_xuat / so_cho_ngoi",
+    "DATE_INVALID":       "ngày sai định dạng · hieu_luc_den < hieu_luc_tu · hieu_luc_tu lệch ngay_duyet quá 1 năm",
+    "OUT_OF_SCOPE":       "nhom_xe không tồn tại trong dim_vehicle_type hoặc ngoài phạm vi ô tô chở người",
+    "MODEL_CODE_UNKNOWN": "ma_dong_xe không tồn tại trong ref_model_map",
+    "VALUE_INVALID":      "nam_san_xuat / so_cho_ngoi / loai_dinh_gia ngoài miền giá trị (domain) hợp lệ",
+    "PRICE_INVALID":      "gia_tri_dinh_gia sai định dạng hoặc ngoài [50 triệu, 50 tỷ] VND",
 }
 
 
-# ---- Công cụ nhỏ ------------------------------------------------------------------------
+# ---- Hàm tiện ích (helper) --------------------------------------------------------------
 def surrogate_key(*cols: str) -> Column:
-    """Khoá thay thế TẤT ĐỊNH = băm khoá tự nhiên.
+    """Surrogate key TẤT ĐỊNH (deterministic) = băm natural key.
 
     Không dùng row_number() hay monotonically_increasing_id(): chúng đánh số theo thứ tự dữ liệu,
-    thêm một mã xe mới là cả dãy số đổi -> fact cũ trỏ sai dimension. Băm thì cùng khoá tự nhiên
-    luôn ra cùng một số, chạy lại bao nhiêu lần cũng vậy.
+    nên chỉ cần bổ sung một mã xe mới là cả dãy khoá thay đổi -> fact cũ tham chiếu sai dimension.
+    Hàm băm luôn cho cùng một giá trị với cùng một natural key, re-run bao nhiêu lần cũng vậy.
     """
     return F.xxhash64(*[F.col(c) for c in cols])
 
 
 def date_key(col: Column) -> Column:
-    """date -> số nguyên yyyymmdd (khoá chuẩn của dim_date). null giữ null."""
+    """date -> số nguyên yyyymmdd (khoá chuẩn của dim_date). Giá trị null được giữ nguyên là null."""
     return F.date_format(col, "yyyyMMdd").cast("int")
 
 
@@ -71,12 +72,13 @@ def blank(col: str) -> Column:
 
 
 def ok(cond: Column) -> Column:
-    """Điều kiện hợp lệ; null (do đầu vào null) coi là KHÔNG hợp lệ."""
+    """Điều kiện hợp lệ; kết quả null (do đầu vào null) được xem là KHÔNG hợp lệ."""
     return F.coalesce(cond, F.lit(False))
 
 
 def read_ref_csv(spark: SparkSession, path: Path) -> DataFrame:
-    """Bảng ref_* nhỏ -> đọc bằng Python (utf-8-sig bỏ BOM), trim mọi giá trị, mọi cột string."""
+    """Reference data ref_* có kích thước nhỏ -> đọc bằng Python (utf-8-sig loại bỏ BOM), trim mọi
+    giá trị, mọi cột kiểu string."""
     with open(path, newline="", encoding="utf-8-sig") as f:
         rows = list(csv.DictReader(f))
     cols = list(rows[0].keys())
@@ -88,19 +90,20 @@ def read_ref_csv(spark: SparkSession, path: Path) -> DataFrame:
 
 
 def assert_unique(df: DataFrame, key: str, name: str) -> None:
-    """Khoá dimension phải duy nhất, nếu không LEFT JOIN sẽ NHÂN BẢN dòng fact một cách im lặng."""
+    """Khoá của dimension phải duy nhất (unique), nếu không LEFT JOIN sẽ âm thầm NHÂN BẢN record fact."""
     dup = df.groupBy(key).count().filter("count > 1").count()
     if dup:
         raise ValueError(f"{name}: {dup} giá trị {key} bị trùng")
 
 
-# ---- 1. Lô active -----------------------------------------------------------------------
+# ---- 1. Batch active --------------------------------------------------------------------
 def active_bronze(bronze: DataFrame) -> DataFrame:
-    """Mỗi as_of_month chỉ giữ bản nạp mới nhất.
+    """Mỗi as_of_month chỉ giữ lại lần ingest mới nhất (Bronze active).
 
-    Bronze là append-only: bên cung cấp gửi lại lô tháng 6 (batch_id mới) thì Bronze có HAI bản
-    tháng 6. Silver phải chọn một — bản mới nhất thắng; bản cũ vẫn nằm ở Bronze để truy vết.
-    "Mới nhất" = _ingest_ts lớn nhất; bằng nhau (nạp trong cùng một giây) -> _batch_id lớn hơn.
+    Bronze là append-only: khi bên cung cấp gửi lại batch tháng 6 (batch_id mới), Bronze chứa HAI bản
+    của tháng 6. Silver phải chọn một — bản mới nhất được sử dụng; bản cũ vẫn lưu tại Bronze để phục vụ
+    truy vết (audit trail). "Mới nhất" = _ingest_ts lớn nhất; nếu bằng nhau (ingest trong cùng một
+    giây) -> _batch_id lớn hơn.
     """
     w = Window.partitionBy(PARTITION_COL)
     latest = F.max(F.struct("_ingest_ts", "_batch_id")).over(w)
@@ -110,16 +113,16 @@ def active_bronze(bronze: DataFrame) -> DataFrame:
                   .drop("_latest"))
 
 
-# ---- 2. Dimension từ ref_* --------------------------------------------------------------
+# ---- 2. Dimension từ reference data ref_* -----------------------------------------------
 def build_dim_model(ref_model_map: DataFrame) -> DataFrame:
-    """Grain: 1 dòng = 1 mã dòng xe nội bộ. Phân cấp: hang_xe > hieu_xe > ma_hieu > ma_dong_xe."""
+    """Grain: 1 record = 1 mã dòng xe nội bộ. Phân cấp (hierarchy): hang_xe > hieu_xe > ma_hieu > ma_dong_xe."""
     assert_unique(ref_model_map, "ma_dong_xe", "ref_model_map")
     return ref_model_map.select(surrogate_key("ma_dong_xe").alias("model_key"),
                                 "ma_dong_xe", "ma_hieu", "hang_xe", "hieu_xe")
 
 
 def build_dim_vehicle_type(ref_veh_type: DataFrame) -> DataFrame:
-    """Grain: 1 dòng = 1 mã loại xe. Thêm muc_dich_su_dung để roll-up (gộp nhóm) khi phân tích."""
+    """Grain: 1 record = 1 mã loại xe. Bổ sung muc_dich_su_dung để roll-up (gộp nhóm) khi phân tích."""
     assert_unique(ref_veh_type, "VEH_TYPE", "ref_veh_type_scope")
     code = F.col("VEH_TYPE")
     muc_dich = (F.when(code.startswith("KKD"), "Không kinh doanh")
@@ -134,7 +137,8 @@ def build_dim_vehicle_type(ref_veh_type: DataFrame) -> DataFrame:
 
 
 def build_dim_date(spark: SparkSession, fact: DataFrame) -> DataFrame:
-    """Grain: 1 dòng = 1 ngày. Phủ trọn các NĂM có trong fact (suy từ dữ liệu, không từ ngày chạy)."""
+    """Grain: 1 record = 1 ngày. Bao phủ trọn các NĂM có trong fact (suy ra từ dữ liệu, không từ ngày
+    thực thi job — bảo đảm reproducibility)."""
     bounds = fact.select(
         F.least(F.min("ngay_duyet"), F.min("hieu_luc_tu")).alias("lo"),
         F.greatest(F.max("ngay_duyet"), F.max("hieu_luc_tu")).alias("hi")).first()
@@ -151,12 +155,12 @@ def build_dim_date(spark: SparkSession, fact: DataFrame) -> DataFrame:
         F.dayofweek("ngay").isin(1, 7).alias("la_cuoi_tuan"))
 
 
-# ---- 3 + 4. Parse, tra dimension, gán luật ----------------------------------------------
+# ---- 3 + 4. Parse, lookup dimension, gán rule -------------------------------------------
 def parse_and_lookup(bronze: DataFrame, dim_model: DataFrame, dim_vehicle_type: DataFrame) -> DataFrame:
-    """Thêm cột đã parse (tiền tố p_) và khoá dimension. Cột thô GIỮ NGUYÊN cho quarantine.
+    """Bổ sung các cột đã parse (tiền tố p_) và khoá dimension. Cột thô được GIỮ NGUYÊN cho quarantine.
 
-    Tra dimension luôn là LEFT JOIN: dòng không tra được vẫn còn (khoá null), để luật phía sau
-    đưa nó vào quarantine. INNER JOIN sẽ làm dòng đó biến mất không dấu vết.
+    Lookup dimension luôn dùng LEFT JOIN: record không lookup được vẫn được giữ lại (khoá null), để
+    rule phía sau đưa nó vào quarantine. INNER JOIN sẽ khiến record đó biến mất mà không để lại dấu vết.
     """
     t = lambda c: F.trim(F.col(c))
     df = (bronze
@@ -178,9 +182,9 @@ def parse_and_lookup(bronze: DataFrame, dim_model: DataFrame, dim_vehicle_type: 
 
 
 def rule_conditions(df: DataFrame) -> dict[str, Column]:
-    """{rule_id: Column boolean, true = VI PHẠM}. Mỗi điều kiện không bao giờ null."""
-    # DUP_KEY: xếp hạng trong nhóm cùng ma_dinh_gia, dòng hạng 1 thắng. Thứ tự tất định (không phụ
-    # thuộc thứ tự đọc file): hiệu lực muộn nhất -> giá lớn hơn -> batch_id lớn hơn.
+    """{rule_id: Column boolean, true = VI PHẠM}. Không điều kiện nào trả về null."""
+    # DUP_KEY: xếp hạng trong nhóm cùng ma_dinh_gia, record hạng 1 được giữ lại. Thứ tự tất định
+    # (deterministic, không phụ thuộc thứ tự đọc tệp): hiệu lực muộn nhất -> giá lớn hơn -> batch_id lớn hơn.
     w = Window.partitionBy("ma_dinh_gia").orderBy(
         F.col("p_hieu_luc_tu").desc_nulls_last(), F.col("p_gia_vnd").desc_nulls_last(),
         F.col("_batch_id").desc())
@@ -204,17 +208,18 @@ def rule_conditions(df: DataFrame) -> dict[str, Column]:
 
 
 def assign_rule_id(df: DataFrame) -> DataFrame:
-    """Cột rule_id = luật ĐẦU TIÊN (theo thứ tự RULES) mà dòng vi phạm; null = dòng sạch."""
+    """Cột rule_id = rule ĐẦU TIÊN (theo thứ tự RULES) mà record vi phạm; null = record hợp lệ."""
     conds = rule_conditions(df)
     expr = F.lit(None).cast(StringType())
-    for rule in reversed(list(RULES)):          # dựng từ cuối lên -> luật đầu danh sách thắng
+    for rule in reversed(list(RULES)):          # dựng từ cuối lên -> rule đứng đầu danh sách được ưu tiên
         expr = F.when(conds[rule], F.lit(rule)).otherwise(expr)
     return df.withColumn("rule_id", expr)
 
 
 def transform(bronze: DataFrame, dim_model: DataFrame,
               dim_vehicle_type: DataFrame) -> tuple[DataFrame, DataFrame]:
-    """Bronze active -> (fact_valuation, quarantine). Hàm thuần: không đọc/ghi đĩa -> test được."""
+    """Bronze active -> (fact_valuation, quarantine). Hàm thuần (pure function): không đọc/ghi đĩa
+    -> kiểm thử được độc lập."""
     raw_cols = list(bronze.columns)
     staged = assign_rule_id(parse_and_lookup(bronze, dim_model, dim_vehicle_type))
 
@@ -240,7 +245,7 @@ def transform(bronze: DataFrame, dim_model: DataFrame,
     return fact, quarantine
 
 
-# ---- Chạy ---------------------------------------------------------------------------------
+# ---- Thực thi -----------------------------------------------------------------------------
 def run(spark: SparkSession, bronze_dir: Path = BRONZE_DIR, silver_dir: Path = SILVER_DIR,
         ref_model_map: Path = REF_MODEL_MAP, ref_veh_type: Path = REF_VEH_TYPE) -> dict[str, int]:
     if not bronze_dir.exists():
@@ -255,16 +260,16 @@ def run(spark: SparkSession, bronze_dir: Path = BRONZE_DIR, silver_dir: Path = S
     dim_date = build_dim_date(spark, fact)
 
     n_bronze, n_fact, n_quar = bronze.count(), fact.count(), quarantine.count()
-    if n_fact + n_quar != n_bronze:                     # không dòng nào được phép biến mất
+    if n_fact + n_quar != n_bronze:                     # invariant: không record nào được phép biến mất
         raise RuntimeError(f"Đối soát lệch: fact {n_fact} + quarantine {n_quar} ≠ bronze {n_bronze}")
 
     def write(df: DataFrame, name: str, partitioned: bool = False) -> None:
         path = (silver_dir / name).as_posix()
-        if partitioned:                                  # fact/quarantine: 1 thư mục / tháng
-            # repartition trước: mỗi tháng nằm gọn trong 1 task -> 1 file/tháng, ít writer mở cùng lúc
+        if partitioned:                                  # fact/quarantine: 1 thư mục partition / tháng
+            # repartition trước: mỗi tháng nằm gọn trong 1 task -> 1 tệp/tháng, ít writer mở cùng lúc
             (df.repartition(PARTITION_COL)
                .write.mode("overwrite").partitionBy(PARTITION_COL).parquet(path))
-        else:                                            # dimension nhỏ: 1 file
+        else:                                            # dimension nhỏ: 1 tệp
             df.coalesce(1).write.mode("overwrite").parquet(path)
 
     write(dim_model, "dim_model")

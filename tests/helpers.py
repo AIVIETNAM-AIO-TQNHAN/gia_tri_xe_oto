@@ -1,11 +1,11 @@
-"""Dữ liệu dựng tay dùng chung cho các test Spark."""
+"""Dữ liệu dựng thủ công (fixture data) dùng chung cho các test có Spark."""
 from datetime import datetime
 
 from pyspark.sql.types import StringType, StructField, StructType, TimestampType
 
 from src.config import EXPECTED_COLUMNS
 
-# Một dòng Bronze hợp lệ; test đổi vài ô để tạo từng tình huống
+# Một record Bronze hợp lệ; mỗi test đổi vài ô để tạo ra từng tình huống
 VALID = {
     "ma_nghiep_vu": "070104", "nhom_xe": "KKD1-1", "hang_xe": "", "ma_dong_xe": "TOY01001",
     "ma_kieu_dang": "", "so_cho_ngoi": "5", "nam_san_xuat": "2020", "gia_tri_dinh_gia": "500000000",
@@ -21,15 +21,15 @@ REF_TYPE_SCHEMA = "VEH_TYPE string, mo_ta string, trong_pham_vi string"
 def local_df(spark, data, schema):
     """createDataFrame từ list Python, rồi đưa hẳn vào JVM MỘT lần.
 
-    DataFrame dựng từ list Python mặc định chia 8 partition; MỖI action trên nó phải khởi động
-    Python worker cho từng partition — trên Windows mất ~6 giây/action. localCheckpoint tính một
+    DataFrame dựng từ list Python mặc định chia thành 8 partition; MỖI action trên nó phải khởi động
+    Python worker cho từng partition — trên Windows mất ~6 giây/action. localCheckpoint tính toán một
     lần, lưu vào bộ nhớ JVM, các action sau không cần Python worker nữa (17 giây -> 0,6 giây).
     """
     return spark.createDataFrame(data, schema).coalesce(1).localCheckpoint()
 
 
 def bronze_df(spark, rows: list[dict]):
-    """Danh sách dict -> DataFrame giống Bronze: 16 cột string + cột kỹ thuật."""
+    """Danh sách dict -> DataFrame có cấu trúc như Bronze: 16 cột kiểu string + technical column."""
     cols = EXPECTED_COLUMNS + ["_batch_id", "_source_file"]
     schema = StructType([StructField(c, StringType()) for c in cols]
                         + [StructField("_ingest_ts", TimestampType())])

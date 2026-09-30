@@ -1,7 +1,8 @@
-"""SparkSession local dùng chung.
+"""SparkSession chế độ local, dùng chung cho mọi job.
 
-Windows cần: JAVA_HOME (Java 17 hoặc 11) và HADOOP_HOME có bin/winutils.exe + bin/hadoop.dll.
-Thiếu winutils vẫn đọc được nhưng GHI Parquet sẽ lỗi — nên kiểm tra ngay từ đầu cho dễ hiểu lỗi.
+Trên Windows cần: JAVA_HOME (Java 17 hoặc 11) và HADOOP_HOME có bin/winutils.exe + bin/hadoop.dll.
+Thiếu winutils vẫn đọc được dữ liệu nhưng thao tác GHI Parquet sẽ lỗi — nên kiểm tra ngay từ đầu
+(fail fast) để thông báo lỗi dễ hiểu.
 """
 import os
 import sys
@@ -22,9 +23,9 @@ def _check_env() -> None:
 
 
 def get_spark(app_name: str = "gia_tri_xe_oto") -> SparkSession:
-    """Gọi nhiều lần trả về CÙNG một session (getOrCreate)."""
+    """Gọi nhiều lần vẫn trả về CÙNG một session (getOrCreate)."""
     _check_env()
-    # Worker dùng đúng bản Python đang chạy — tránh "Python worker failed to connect back"
+    # Python worker dùng đúng trình thông dịch đang chạy — tránh lỗi "Python worker failed to connect back"
     os.environ.setdefault("PYSPARK_PYTHON", sys.executable)
     os.environ.setdefault("PYSPARK_DRIVER_PYTHON", sys.executable)
 
@@ -34,9 +35,9 @@ def get_spark(app_name: str = "gia_tri_xe_oto") -> SparkSession:
         .appName(app_name)
         .config("spark.sql.session.timeZone", "Asia/Ho_Chi_Minh")
         .config("spark.sql.shuffle.partitions", "8")      # dữ liệu nhỏ: 8 thay vì mặc định 200
-        # Ngày sai dạng -> null (để luật DATE_INVALID bắt), thay vì ném lỗi làm hỏng cả job
+        # Ngày sai định dạng -> null (để rule DATE_INVALID phát hiện), thay vì ném exception làm hỏng cả job
         .config("spark.sql.legacy.timeParserPolicy", "CORRECTED")
-        # Giữ as_of_month=2026-06 là string khi đọc lại thư mục partition, không để Spark tự đoán kiểu
+        # Giữ as_of_month=2026-06 ở kiểu string khi đọc lại thư mục partition, không để Spark tự suy luận kiểu
         .config("spark.sql.sources.partitionColumnTypeInference.enabled", "false")
         .config("spark.ui.showConsoleProgress", "false")
         .getOrCreate()

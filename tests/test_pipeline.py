@@ -1,4 +1,4 @@
-"""Test có Spark: luật Silver trên dữ liệu dựng tay + tính idempotent của Bronze trên lô thật."""
+"""Test có Spark: rule Silver trên dữ liệu dựng thủ công + tính idempotent của Bronze trên batch thực tế."""
 import json
 import shutil
 
@@ -7,9 +7,9 @@ import pytest
 from helpers import REF_MODEL_SCHEMA, REF_TYPE_SCHEMA, VALID, bronze_df, local_df
 from src import bronze, silver
 
-# ---- Luật Silver ----------------------------------------------------------------------
+# ---- Record-level validation tại Silver ------------------------------------------------
 
-# ma_dinh_gia -> (các ô đổi so với VALID, rule_id mong đợi; None = vào fact)
+# ma_dinh_gia -> (các ô thay đổi so với VALID, rule_id kỳ vọng; None = vào fact)
 CASES = {
     "BV-1":  ({}, None),
     "BV-2":  ({"ma_dong_xe": "ZZZ99999"}, "MODEL_CODE_UNKNOWN"),
@@ -22,7 +22,7 @@ CASES = {
     "BV-9":  ({"hieu_luc_den": "2026-01-01"}, "DATE_INVALID"),               # đến < từ
     "BV-10": ({"ngay_duyet": "10/06/2026"}, "DATE_INVALID"),                 # sai định dạng
     "BV-11": ({"hieu_luc_tu": "2008-06-11", "hieu_luc_den": "2009-06-11"}, "DATE_INVALID"),
-    "BV-12": ({"ma_dong_xe": "ZZZ99999", "gia_tri_dinh_gia": "0"}, "MODEL_CODE_UNKNOWN"),  # ưu tiên
+    "BV-12": ({"ma_dong_xe": "ZZZ99999", "gia_tri_dinh_gia": "0"}, "MODEL_CODE_UNKNOWN"),  # thứ tự ưu tiên rule
     "":      ({}, "DUP_KEY"),                                                # khoá rỗng
 }
 
@@ -39,7 +39,7 @@ def dims(spark):
 def result(spark, dims):
     rows = [{**VALID, **changes, "ma_dinh_gia": key, "_batch_id": "b1"}
             for key, (changes, _) in CASES.items()]
-    # Trùng khoá BV-13: dòng hiệu lực muộn hơn thắng, dòng kia vào DUP_KEY
+    # Trùng khoá BV-13: record có hiệu lực muộn hơn được giữ lại, record còn lại vào DUP_KEY
     rows += [{**VALID, "ma_dinh_gia": "BV-13", "hieu_luc_tu": "2026-06-20", "_batch_id": "b1"},
              {**VALID, "ma_dinh_gia": "BV-13", "hieu_luc_tu": "2026-06-11", "_batch_id": "b1"}]
     fact, quarantine = silver.transform(bronze_df(spark, rows), *dims)
@@ -75,7 +75,7 @@ def test_fact_row_is_typed_and_keyed(result, dims):
 
 
 def test_surrogate_key_is_deterministic(spark, dims):
-    """Chạy lại -> cùng khoá. Nếu khoá đổi giữa hai lần chạy, fact cũ sẽ trỏ sai dimension."""
+    """Re-run -> cùng khoá. Nếu khoá thay đổi giữa hai lần chạy, fact cũ sẽ tham chiếu sai dimension."""
     first_run, _ = dims
     second_run = silver.build_dim_model(local_df(
         spark, [("NEW01001", "NEW01", "Mới", "Xe mới"), ("TOY01001", "TOY01", "Toyota", "Vios")],
@@ -84,7 +84,7 @@ def test_surrogate_key_is_deterministic(spark, dims):
     assert key(first_run) == key(second_run)
 
 
-# ---- Bronze: idempotent + lô gửi lại -------------------------------------------------
+# ---- Bronze: idempotent + batch được gửi lại ------------------------------------------
 def test_bronze_is_idempotent(spark, one_batch, tmp_path):
     landing, bronze_dir, control = one_batch.parent, tmp_path / "bronze", tmp_path / "loaded.csv"
 
@@ -98,7 +98,8 @@ def test_bronze_is_idempotent(spark, one_batch, tmp_path):
 
 
 def test_redelivered_batch_silver_reads_latest_only(spark, one_batch, tmp_path):
-    """Bên cung cấp gửi lại tháng 2025-01 (batch_id mới): Bronze giữ CẢ HAI bản, Silver chỉ đọc bản mới."""
+    """Bên cung cấp gửi lại tháng 2025-01 (batch_id mới): Bronze giữ CẢ HAI bản, Silver chỉ đọc bản
+    mới nhất (Bronze active)."""
     landing, bronze_dir, control = one_batch.parent, tmp_path / "bronze", tmp_path / "loaded.csv"
     bronze.run(spark, landing, bronze_dir, control)
 

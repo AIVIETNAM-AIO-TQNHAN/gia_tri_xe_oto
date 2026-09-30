@@ -1,4 +1,5 @@
-"""Cổng kiểm tra lô: mỗi test làm hỏng lô mẫu theo MỘT cách và kiểm validator bắt đúng luật."""
+"""Batch-level validation: mỗi test làm hỏng batch mẫu theo MỘT cách và kiểm tra validator phát
+hiện đúng rule."""
 import json
 from pathlib import Path
 
@@ -36,7 +37,7 @@ def test_manifest_missing_field(one_batch):
 
 
 def test_file_edited_after_delivery(one_batch):
-    """Sửa tay 1 ô sau khi bàn giao -> checksum lệch, dù số dòng và cột vẫn đúng."""
+    """Sửa thủ công 1 ô sau khi bàn giao -> checksum lệch, dù số record và cột vẫn đúng."""
     f = data_file(one_batch)
     text = f.read_text(encoding="utf-8-sig")
     f.write_text(text.replace(",5,", ",7,", 1), encoding="utf-8-sig")
@@ -52,7 +53,7 @@ def test_missing_column(one_batch):
     f = data_file(one_batch)
     text = f.read_text(encoding="utf-8-sig")
     f.write_text(text.replace("ma_dinh_gia", "valuation_id", 1), encoding="utf-8-sig")
-    assert "SCHEMA_COLUMN_MISSING" in rules(one_batch)       # kèm CHECKSUM_MISMATCH vì file đã đổi
+    assert "SCHEMA_COLUMN_MISSING" in rules(one_batch)       # kèm CHECKSUM_MISMATCH vì tệp đã bị sửa
 
 
 def test_partition_mismatch(one_batch):

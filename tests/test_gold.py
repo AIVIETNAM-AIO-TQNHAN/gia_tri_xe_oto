@@ -1,14 +1,15 @@
-"""mart_ml_training: grain, cách chia train/test và contract đầu ra (README §5.3).
+"""mart_ml_training: grain, cách chia train/test và output data contract (README §5.3).
 
-Dữ liệu đi đúng đường thật: dòng Bronze dựng tay -> silver.transform -> view Silver -> SQL của Gold.
-Nhờ vậy test cũng bắt được lệch kiểu cột giữa Silver và contract, không chỉ lỗi trong câu SQL.
+Dữ liệu đi qua đúng luồng thực tế: record Bronze dựng thủ công -> silver.transform -> view Silver
+-> SQL của Gold. Nhờ vậy test phát hiện được cả sai lệch kiểu cột giữa Silver và contract, không chỉ
+lỗi trong câu SQL.
 """
 import pytest
 
 from helpers import REF_MODEL_SCHEMA, REF_TYPE_SCHEMA, VALID, bronze_df, local_df
 from src import gold, silver
 
-# (ma_dinh_gia, ngày duyệt, ô đổi thêm). Mốc cắt dùng trong test: 2026-03.
+# (ma_dinh_gia, ngày duyệt, ô thay đổi thêm). Mốc chia dùng trong test: 2026-03.
 ROWS = [
     ("BV-FEB", "2026-02-15", {}),
     ("BV-MAR", "2026-03-31", {"loai_dinh_gia": "new", "nam_san_xuat": "2026"}),   # sát mốc -> train
@@ -29,7 +30,7 @@ def mart(spark):
     dim_model = silver.build_dim_model(ref_model)
     dim_vehicle_type = silver.build_dim_vehicle_type(ref_type)
     fact, _ = silver.transform(bronze_df(spark, rows), dim_model, dim_vehicle_type)
-    # Tính fact MỘT lần rồi cắt lineage: nếu không, mỗi action phía dưới Spark lại chạy lại
+    # Tính fact MỘT lần rồi cắt lineage: nếu không, với mỗi action phía dưới, Spark lại thực thi lại
     # toàn bộ silver.transform (window, join).
     fact = fact.localCheckpoint()
 
@@ -42,7 +43,7 @@ def mart(spark):
 
 
 def test_one_row_per_contract(mart):
-    """Grain = fact: không gộp, không nhân bản dòng khi join dimension, không mất dòng."""
+    """Grain = fact: không tổng hợp, không nhân bản record khi join dimension, không mất record."""
     _, rows, n_fact = mart
     assert len(rows) == n_fact == 3
     assert len({r.ma_dinh_gia for r in rows}) == len(rows)
@@ -66,7 +67,7 @@ def test_features_come_from_dimensions(mart):
 
 def test_output_matches_contract(mart):
     df, _, _ = mart
-    gold.check_ml_contract(df)                    # ném lỗi nếu sai cột/kiểu/thứ tự hoặc có null
+    gold.check_ml_contract(df)                    # ném exception nếu sai cột/kiểu/thứ tự hoặc có null
 
 
 def test_contract_check_rejects_drift(mart):

@@ -1,11 +1,12 @@
-"""Chạy cả pipeline: Landing -> Bronze -> Silver -> Gold, dùng chung một SparkSession.
+"""Điều phối (orchestrate) toàn bộ pipeline: Landing -> Bronze -> Silver -> Gold, dùng chung một SparkSession.
 
-Chạy lại bao nhiêu lần cũng được:
-  - Bronze chỉ nạp lô chưa có trong data/control/loaded_batches.csv (incremental).
-  - Silver và Gold ghi đè toàn bộ (full refresh) từ tầng ngay trước nó.
+Pipeline có thể re-run nhiều lần (idempotent):
+  - Bronze chỉ ingest các batch chưa có trong sổ batch data/control/loaded_batches.csv (incremental).
+  - Silver và Gold được ghi đè toàn bộ (full refresh) từ tầng ngay trước nó.
 
 Chạy:  python -m src.run_pipeline
-Mã thoát: 0 = ổn · 1 = có lô bị từ chối hoặc lỗi khi nạp (Silver/Gold vẫn chạy với các lô đã có).
+Exit code: 0 = thành công · 1 = có batch bị reject hoặc lỗi khi ingest (Silver/Gold vẫn được thực thi
+với các batch đã có).
 """
 import logging
 import sys
@@ -32,7 +33,7 @@ def main() -> int:
         b = bronze.run(spark)
         log.info("== 2/3 Bronze -> Silver (star schema)")
         silver.run(spark)
-        log.info("== 3/3 Silver -> Gold (mart)")
+        log.info("== 3/3 Silver -> Gold (data mart)")
         gold.run(spark)
     finally:
         spark.stop()

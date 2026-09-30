@@ -1,17 +1,17 @@
-"""Silver (star schema) -> Gold (mart tổng hợp) — README §4, §5.3.
+"""Silver (star schema) -> Gold (data mart) — README §4, §5.3.
 
-Gold KHÔNG làm sạch gì thêm: mọi quy tắc làm sạch nằm ở Silver. Gold chỉ JOIN fact với dimension
-rồi GROUP BY để trả lời câu hỏi nghiệp vụ. Viết bằng Spark SQL để thấy rõ dạng truy vấn star schema:
+Gold KHÔNG làm sạch thêm: mọi quy tắc làm sạch nằm tại Silver. Gold chỉ JOIN fact với dimension
+rồi GROUP BY để trả lời câu hỏi nghiệp vụ. Viết bằng Spark SQL để thể hiện rõ dạng truy vấn star schema:
 
-    SELECT <thuộc tính dimension>, <hàm gộp trên measure>
+    SELECT <thuộc tính dimension>, <hàm tổng hợp (aggregate) trên measure>
     FROM   fact JOIN dim_a ON fact.a_key = dim_a.a_key JOIN dim_b ...
     GROUP BY <thuộc tính dimension>
 
-Bốn mart:
-    mart_vehicle_price   giá trung vị xe mới / xe cũ theo (hãng, dòng, đời, số chỗ) + tỉ lệ còn lại
+Bốn data mart:
+    mart_vehicle_price   giá trung vị (median) xe mới / xe cũ theo (hãng, dòng, đời, số chỗ) + tỷ lệ giá trị còn lại
     mart_monthly_trend   số hợp đồng và giá trung vị theo tháng, hãng, mục đích sử dụng
-    mart_data_quality    mỗi tháng: bao nhiêu dòng vào fact, bao nhiêu vào quarantine, vì luật nào
-    mart_ml_training     bảng đặc trưng cho model ML: 1 dòng = 1 hợp đồng, KHÔNG gộp (§4.1)
+    mart_data_quality    mỗi tháng: bao nhiêu record vào fact, bao nhiêu vào quarantine, do vi phạm rule nào
+    mart_ml_training     feature table cho mô hình ML: grain 1 record = 1 hợp đồng, KHÔNG tổng hợp (README §5.3)
 
 Chạy:  python -m src.gold
 """
@@ -69,7 +69,8 @@ ORDER BY d.nam_thang, m.hang_xe, v.muc_dich_su_dung, f.loai_dinh_gia
 
 
 def mart_data_quality_sql() -> str:
-    """Một cột đếm cho mỗi rule_id — danh sách luật lấy từ silver.RULES, không viết tay hai nơi."""
+    """Một cột đếm cho mỗi rule_id — danh sách rule lấy từ silver.RULES (single source of truth),
+    không khai báo thủ công ở hai nơi."""
     per_rule = ",\n       ".join(f"COUNT_IF(rule_id = '{r}') AS {r.lower()}" for r in RULES)
     return f"""
 WITH all_rows AS (
@@ -89,17 +90,17 @@ ORDER BY as_of_month
 """
 
 
-# ---- mart_ml_training: contract đầu ra (README §5.3) ----------------------------------
+# ---- mart_ml_training: output data contract (README §5.3) ------------------------------
 # (cột, kiểu Spark, vai trò). Thứ tự cột là một phần của contract.
 ML_TRAINING_CONTRACT = [
-    ("ma_dinh_gia",       "string", "id"),        # truy vết về fact — KHÔNG đưa vào model
+    ("ma_dinh_gia",       "string", "id"),        # truy vết (lineage) về fact — KHÔNG đưa vào mô hình
     ("hang_xe",           "string", "feature"),
     ("hieu_xe",           "string", "feature"),
     ("nam_san_xuat",      "int",    "feature"),
     ("tuoi_xe",           "int",    "feature"),
     ("so_cho_ngoi",       "int",    "feature"),
     ("muc_dich_su_dung",  "string", "feature"),
-    ("loai_dinh_gia",     "string", "feature"),   # suy luận, gần trùng thông tin với tuoi_xe
+    ("loai_dinh_gia",     "string", "feature"),   # derived attribute, thông tin gần trùng với tuoi_xe
     ("thang_duyet",       "string", "feature"),
     ("gia_tri_trieu_vnd", "double", "target"),
     ("split",             "string", "split"),
@@ -107,14 +108,16 @@ ML_TRAINING_CONTRACT = [
 
 
 def mart_ml_training_sql(train_end_month: str = ML_TRAIN_END_MONTH) -> str:
-    """Grain = 1 hợp đồng, giống fact — KHÔNG GROUP BY. Model học từ từng quan sát, không từ trung vị.
+    """Grain = 1 hợp đồng, cùng grain với fact — KHÔNG GROUP BY. Mô hình học từ từng quan sát,
+    không từ giá trị trung vị.
 
-    Chỉ lấy cột có sẵn trên CHÍNH dòng đó (không feature tổng hợp kiểu "giá trung vị của dòng xe"):
-    tính tổng hợp trên toàn bộ dữ liệu là để giá của tập test lọt vào feature của tập train (leakage).
-    split theo THÁNG DUYỆT, không ngẫu nhiên: model phải được thử trên các tháng nó chưa từng thấy,
-    đúng như lúc dùng thật; và chạy lại bao nhiêu lần cũng ra cùng một cách chia.
-    INNER JOIN ở đây an toàn: Silver bảo đảm mọi khoá ngoại của fact đều có trong dimension —
-    test_one_row_per_contract kiểm lại điều đó bằng số dòng.
+    Chỉ lấy các cột có sẵn trên CHÍNH record đó (không dùng aggregate feature kiểu "giá trung vị của
+    dòng xe"): tính tổng hợp trên toàn bộ dữ liệu sẽ khiến giá của tập test lọt vào feature của tập
+    train (data leakage).
+    Chia split theo THÁNG DUYỆT, không ngẫu nhiên: mô hình phải được đánh giá trên các tháng chưa
+    từng thấy, đúng như khi triển khai thực tế; và re-run bao nhiêu lần cũng cho cùng một cách chia.
+    INNER JOIN ở đây an toàn: Silver bảo đảm mọi khoá ngoại (foreign key) của fact đều tồn tại trong
+    dimension — test_one_row_per_contract kiểm chứng lại điều đó bằng số record.
     """
     return f"""
 SELECT f.ma_dinh_gia,
@@ -137,8 +140,9 @@ ORDER BY f.ma_dinh_gia
 
 
 def check_ml_contract(df: DataFrame) -> None:
-    """Đầu ra phải khớp contract: đúng cột, đúng thứ tự, đúng kiểu, không null. Sai là DỪNG —
-    thà không ghi bảng còn hơn ghi một bảng mà code huấn luyện phía sau đọc sai im lặng."""
+    """Output phải khớp contract: đúng cột, đúng thứ tự, đúng kiểu, không null. Vi phạm thì DỪNG
+    (fail fast) — thà không ghi bảng còn hơn ghi một bảng mà code huấn luyện phía sau (downstream)
+    đọc sai một cách âm thầm."""
     expected = [(c, t) for c, t, _ in ML_TRAINING_CONTRACT]
     actual = [(f.name, f.dataType.simpleString()) for f in df.schema.fields]
     if actual != expected:
@@ -150,7 +154,7 @@ def check_ml_contract(df: DataFrame) -> None:
 
 
 def register_silver(spark: SparkSession, silver_dir: Path) -> None:
-    """Mỗi bảng Silver thành một temp view để viết SQL."""
+    """Đăng ký mỗi bảng Silver thành một temp view để truy vấn bằng Spark SQL."""
     for name in SILVER_TABLES:
         path = silver_dir / name
         if not path.exists():
@@ -171,16 +175,16 @@ def run(spark: SparkSession, silver_dir: Path = SILVER_DIR, gold_dir: Path = GOL
     for name, df in marts.items():
         df = df.coalesce(1).cache()
         if name == "mart_ml_training":
-            check_ml_contract(df)                 # kiểm TRƯỚC khi ghi
+            check_ml_contract(df)                 # kiểm tra contract TRƯỚC khi ghi
         df.write.mode("overwrite").parquet((gold_dir / name).as_posix())
         counts[name] = df.count()
         if csv_dir is not None:                   # bản CSV để mở bằng Excel khi viết báo cáo
             csv_dir.mkdir(parents=True, exist_ok=True)
             df.toPandas().to_csv(csv_dir / f"{name}.csv", index=False, encoding="utf-8-sig")
-        log.info("Gold: %-20s %6d dòng", name, counts[name])
+        log.info("Gold: %-20s %6d record", name, counts[name])
         if name == "mart_ml_training":
             by_split = {r.split: r["count"] for r in df.groupBy("split").count().collect()}
-            log.info("      %-20s train %d · test %d (mốc %s)", "", by_split.get("train", 0),
+            log.info("      %-20s train %d · test %d (mốc chia %s)", "", by_split.get("train", 0),
                      by_split.get("test", 0), ML_TRAIN_END_MONTH)
     return counts
 

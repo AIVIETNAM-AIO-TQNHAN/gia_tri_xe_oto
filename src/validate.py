@@ -1,16 +1,17 @@
-"""Cổng kiểm tra lô — chạy TRƯỚC khi nạp Bronze (docs/DATA_CONTRACT.md §6).
+"""Batch-level validation — thực thi TRƯỚC khi ingest vào Bronze (docs/DATA_CONTRACT.md §6).
 
-Python thuần, không cần Spark: chỉ đọc manifest, header và đếm dòng.
-Mọi luật ở đây đều là REJECT: vi phạm một luật là từ chối CẢ LÔ, file nằm nguyên ở landing,
-bên cung cấp phải bàn giao lại. Pipeline không bao giờ tự sửa file landing.
+Python thuần, không cần Spark: chỉ đọc manifest, header và đếm số record.
+Mọi rule ở đây đều là REJECT: vi phạm một rule thì TOÀN BỘ BATCH bị reject, tệp được giữ nguyên tại
+landing zone và bên cung cấp (data provider) phải bàn giao lại. Pipeline không bao giờ tự sửa tệp
+tại landing zone.
 
-    MANIFEST_INVALID       không có/không đọc được _manifest.json, thiếu field, hoặc không thấy file dữ liệu
-    CHECKSUM_MISMATCH      sha256 của file khác file_sha256 trong manifest
-    SCHEMA_COLUMN_MISSING  header thiếu cột bắt buộc
-    COUNT_MISMATCH         số dòng dữ liệu khác record_count trong manifest
-    PARTITION_MISMATCH     tên thư mục, as_of_month của manifest và cột as_of_month không trùng nhau
+    MANIFEST_INVALID       thiếu/không đọc được _manifest.json, thiếu field bắt buộc, hoặc không thấy tệp dữ liệu
+    CHECKSUM_MISMATCH      SHA-256 của tệp khác file_sha256 trong manifest
+    SCHEMA_COLUMN_MISSING  header thiếu cột bắt buộc so với schema
+    COUNT_MISMATCH         số record dữ liệu khác record_count trong manifest
+    PARTITION_MISMATCH     tên thư mục, as_of_month của manifest và cột as_of_month không nhất quán
 
-Chạy:  python -m src.validate          (mã thoát 1 nếu có lô bị từ chối)
+Chạy:  python -m src.validate          (exit code 1 nếu có batch bị reject)
 """
 import csv
 import hashlib
@@ -49,8 +50,8 @@ def partition_value(partition_dir: Path) -> str:
 
 
 def validate_batch(partition_dir: Path) -> list[Finding]:
-    """Trả danh sách vi phạm của một lô; rỗng = lô đạt."""
-    # 1. Manifest phải đọc được thì mới kiểm tiếp được — lỗi ở đây dừng ngay
+    """Trả về danh sách vi phạm của một batch; danh sách rỗng = batch hợp lệ."""
+    # 1. Manifest phải đọc được thì mới kiểm tra tiếp được — lỗi ở đây dừng ngay (fail fast)
     try:
         manifest = load_manifest(partition_dir)
     except (FileNotFoundError, json.JSONDecodeError) as e:
@@ -60,17 +61,17 @@ def validate_batch(partition_dir: Path) -> list[Finding]:
         return [Finding("MANIFEST_INVALID", f"manifest thiếu field {missing}")]
     data_file = partition_dir / manifest["file_name"]
     if not data_file.exists():
-        return [Finding("MANIFEST_INVALID", f"không thấy file dữ liệu {manifest['file_name']}")]
+        return [Finding("MANIFEST_INVALID", f"không thấy tệp dữ liệu {manifest['file_name']}")]
 
     findings: list[Finding] = []
 
-    # 2. Checksum: phát hiện file hỏng / truyền thiếu / bị sửa tay sau khi bàn giao
+    # 2. Checksum: phát hiện tệp bị hỏng / truyền tải không đầy đủ / bị sửa thủ công sau khi bàn giao
     actual_sha = sha256_of(data_file)
     if actual_sha != manifest["file_sha256"]:
         findings.append(Finding("CHECKSUM_MISMATCH",
                                 f"sha256 {actual_sha[:12]}… ≠ manifest {manifest['file_sha256'][:12]}…"))
 
-    # 3. Đọc header + đếm dòng — tham số đọc LẤY TỪ MANIFEST, không hard-code
+    # 3. Đọc header + đếm record — tham số đọc (encoding, delimiter) LẤY TỪ MANIFEST, không hard-code
     with open(data_file, newline="", encoding=manifest["encoding"]) as f:
         reader = csv.DictReader(f, delimiter=manifest["delimiter"])
         header = reader.fieldnames or []
@@ -82,9 +83,9 @@ def validate_batch(partition_dir: Path) -> list[Finding]:
 
     if len(rows) != int(manifest["record_count"]):
         findings.append(Finding("COUNT_MISMATCH",
-                                f"file có {len(rows)} dòng, manifest khai {manifest['record_count']}"))
+                                f"tệp có {len(rows)} record, manifest khai báo {manifest['record_count']}"))
 
-    # 4. Ba nơi cùng nói về kỳ dữ liệu phải khớp nhau
+    # 4. Ba nguồn cùng xác định kỳ dữ liệu (thư mục, manifest, cột) phải nhất quán với nhau
     folder = partition_value(partition_dir)
     col_values = {r.get(PARTITION_COL) for r in rows} if PARTITION_COL in header else set()
     if manifest["as_of_month"] != folder or (col_values and col_values != {folder}):
@@ -95,7 +96,7 @@ def validate_batch(partition_dir: Path) -> list[Finding]:
 
 
 def list_batches(landing_dir: Path = LANDING_DIR) -> list[Path]:
-    """Các thư mục lô, sort theo tên = tăng dần theo tháng."""
+    """Các thư mục batch, sắp xếp theo tên = tăng dần theo tháng."""
     return sorted(p for p in landing_dir.glob(f"{PARTITION_COL}=*") if p.is_dir())
 
 
@@ -112,7 +113,7 @@ def main() -> int:
         for f in findings:
             print(f"        {f.rule_id:<22} {f.message}")
     n_bad = sum(1 for f in results.values() if f)
-    print(f"\n{len(results)} lô: {len(results) - n_bad} đạt, {n_bad} bị từ chối")
+    print(f"\n{len(results)} batch: {len(results) - n_bad} hợp lệ, {n_bad} bị reject")
     return 1 if n_bad else 0
 
 
