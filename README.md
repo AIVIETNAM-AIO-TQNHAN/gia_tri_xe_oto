@@ -7,17 +7,6 @@ qua các tầng **Landing → Bronze → Silver → Gold**, chạy bằng **PySp
 Silver được mô hình hoá thành **star schema** (1 fact + 3 dimension). Gold là các bảng tổng hợp
 trả lời câu hỏi nghiệp vụ, cộng một bảng đặc trưng cho ML.
 
-> Mục tiêu của đề tài là **hiểu và nắm kiến thức** Medallion và mô hình hoá chiều, chứ không phải
-> dựng một hệ thống vận hành đầy đủ. Đây là bản thu gọn của đề tài cũ
-> `../Pipeline nạp dữ liệu giá xe ô tô bằng PySpark/`. Những phần đã cắt so với đề tài cũ:
->
-> | Đã cắt | Lý do |
-> |---|---|
-> | Nguồn crawl (bonbanh) và phần hợp nhất 2 nguồn | Phần phình lớn nhất. Không có nguồn thứ hai thì không cần quy tắc ưu tiên nguồn |
-> | Bảng đặc trưng khớp model cũ | Nguồn nghiệp vụ thiếu số km, hộp số, kiểu dáng. Thay bằng `mart_ml_training`, không gắn với model nào |
-> | Schema registry, 17 luật kiểm tra | Rút còn 5 luật ở cổng lô + 8 luật ở Silver, giữ những luật có ý nghĩa với dữ liệu thật |
-> | SCD Type 2, orchestrator, Delta Lake, so sánh Lambda/Kappa | Vận hành nâng cao; không cần để hiểu Medallion + star schema |
-
 ---
 
 ## Mục lục
@@ -39,7 +28,7 @@ trả lời câu hỏi nghiệp vụ, cộng một bảng đặc trưng cho ML.
 
 ---
 
-## 1. Đề tài dạy gì
+## 1. Kiến thức học được
 
 | Khái niệm | Xem ở đâu |
 |---|---|
@@ -108,31 +97,6 @@ Mỗi câu hỏi ứng với một bảng Gold.
 | **Bronze** | Bản sao thô, giữ **mọi** lần bàn giao (kể cả lần gửi lại) | **append**, theo lô |
 | **Silver** | Làm sạch, ép kiểu, đổi đơn vị sang triệu VND, tra dimension, tách quarantine | **overwrite** (full refresh) |
 | **Gold** | Tổng hợp theo câu hỏi nghiệp vụ. **Không làm sạch thêm** | **overwrite** (full refresh) |
-
-Với khoảng 52 nghìn dòng, dựng lại toàn bộ Silver và Gold chỉ mất khoảng 30 giây. Nhờ vậy chạy lại
-bao nhiêu lần cũng ra cùng kết quả mà không cần logic `MERGE`.
-
-### Vì sao gọi là Data Lake, không phải Lakehouse
-
-Lakehouse cần một **table format** (Delta Lake, Iceberg, Hudi) đặt trên các file Parquet để có giao
-dịch ACID, time travel và `MERGE`. Đề tài ghi **Parquet thuần**, nên chỉ mượn một phần ý tưởng của
-Lakehouse: file mở, Medallion, star schema và SQL trên data lake. Việc bỏ Delta là quyết định có chủ
-đích để giữ phạm vi nhỏ.
-
-| Đặc trưng của Lakehouse | Đề tài này | Làm thay bằng cách nào |
-|---|---|---|
-| Lưu trữ bằng file mở (Parquet) | Có | — |
-| Kiến trúc Medallion | Có | — |
-| Mô hình kiểu warehouse trên data lake (star schema, SQL) | Có | Star schema ở Silver, Spark SQL ở Gold |
-| Kiểm soát schema | Một phần | Cổng kiểm tra 16 cột ở landing, contract của bảng ML ở Gold |
-| Giao dịch ACID | Không | Ghi dữ liệu trước, ghi sổ lô sau. Silver/Gold ghi đè toàn bộ |
-| Time travel (đọc lại phiên bản cũ của bảng) | Không | Bronze append-only giữ mọi lần bàn giao |
-| `MERGE` / upsert | Không | Full refresh, đủ nhanh ở quy mô này |
-| Catalog (metastore) | Không | Temp view tạo lại mỗi lần chạy, đường dẫn đặt trong `src/config.py` |
-
-Hạn chế đi kèm: job hỏng khi đang ghi đè một bảng Silver hoặc Gold thì bảng đó có thể còn dở dang
-cho tới lần chạy sau. Chuyển sang Delta Lake là bước để thành Lakehouse: ghi nguyên tử, time travel,
-`MERGE`.
 
 ---
 
@@ -417,16 +381,6 @@ Quarantine chia theo luật:
 | `MODEL_CODE_UNKNOWN` | `PRICE_INVALID` | `VALUE_INVALID` | `DATE_INVALID` | `MISSING_FIELD` | Khác |
 |---|---|---|---|---|---|
 | 5.154 | 2.350 | 280 | 225 | 34 | 0 |
-
-**Phát hiện đáng chú ý**
-- Hơn 60% dòng bị loại là do **mã xe chưa có trong bảng tham chiếu**, không phải do dữ liệu sai.
-  Bổ sung `ref_model_map` là cứu được.
-- Chỉ 115/951 nhóm xe có đủ cả giá mới lẫn giá cũ. Tỷ lệ còn lại trung vị là 0,938. Có 13 nhóm
-  mà xe cũ được định giá cao hơn xe mới, nhiều khả năng do khác phiên bản trong cùng một dòng xe.
-  Lưu ý: dữ liệu chỉ phủ 18 tháng duyệt, nên xe "cũ" cùng đời với xe "mới" hầu hết mới 0–1 năm
-  tuổi. Tỷ lệ này chưa nói gì về khấu hao dài hạn.
-
----
 
 ## 11. Kiểm thử
 
