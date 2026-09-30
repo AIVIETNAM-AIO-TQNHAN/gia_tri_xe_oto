@@ -1,4 +1,4 @@
-"""mart_ml_training: grain, cách chia train/test và contract đầu ra (ARCHITECTURE §4.1).
+"""mart_ml_training: grain, cách chia train/test và contract đầu ra (README §5.3).
 
 Dữ liệu đi đúng đường thật: dòng Bronze dựng tay -> silver.transform -> view Silver -> SQL của Gold.
 Nhờ vậy test cũng bắt được lệch kiểu cột giữa Silver và contract, không chỉ lỗi trong câu SQL.

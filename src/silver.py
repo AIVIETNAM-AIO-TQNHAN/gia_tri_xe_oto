@@ -1,4 +1,4 @@
-"""Bronze -> Silver: làm sạch + dựng STAR SCHEMA (docs/ARCHITECTURE.md §4).
+"""Bronze -> Silver: làm sạch + dựng STAR SCHEMA (README §4, §5.2).
 
                         dim_date (x2: ngày duyệt, ngày hiệu lực)
                             |

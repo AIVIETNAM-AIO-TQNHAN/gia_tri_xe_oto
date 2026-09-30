@@ -1,4 +1,4 @@
-"""Silver (star schema) -> Gold (mart tổng hợp) — docs/ARCHITECTURE.md §5.
+"""Silver (star schema) -> Gold (mart tổng hợp) — README §4, §5.3.
 
 Gold KHÔNG làm sạch gì thêm: mọi quy tắc làm sạch nằm ở Silver. Gold chỉ JOIN fact với dimension
 rồi GROUP BY để trả lời câu hỏi nghiệp vụ. Viết bằng Spark SQL để thấy rõ dạng truy vấn star schema:
@@ -89,7 +89,7 @@ ORDER BY as_of_month
 """
 
 
-# ---- mart_ml_training: contract đầu ra (ARCHITECTURE §4.1) ----------------------------
+# ---- mart_ml_training: contract đầu ra (README §5.3) ----------------------------------
 # (cột, kiểu Spark, vai trò). Thứ tự cột là một phần của contract.
 ML_TRAINING_CONTRACT = [
     ("ma_dinh_gia",       "string", "id"),        # truy vết về fact — KHÔNG đưa vào model

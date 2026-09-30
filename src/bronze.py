@@ -1,4 +1,4 @@
-"""Landing -> Bronze: nạp incremental + idempotent (docs/ARCHITECTURE.md §3).
+"""Landing -> Bronze: nạp incremental + idempotent (README §3).
 
 Mỗi lô:  Cổng kiểm tra -> đã có trong sổ? bỏ qua -> đọc CSV (mọi cột string)
          -> gắn cột kỹ thuật -> GHI BRONZE -> rồi mới GHI SỔ loaded_batches.

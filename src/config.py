@@ -38,5 +38,5 @@ PRICE_VND_MIN = 50_000_000        # 50 triệu
 PRICE_VND_MAX = 50_000_000_000    # 50 tỷ
 MAX_APPROVAL_GAP_DAYS = 366       # hieu_luc_tu phải nằm trong ±1 năm quanh ngay_duyet
 
-# ---- Gold / mart_ml_training (ARCHITECTURE §4.1) -------------------------------------
+# ---- Gold / mart_ml_training (README §5.3) -------------------------------------------
 ML_TRAIN_END_MONTH = "2026-03"    # tháng duyệt <= mốc -> train, sau mốc -> test
