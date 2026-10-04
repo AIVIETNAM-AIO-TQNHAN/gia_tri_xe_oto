@@ -1,0 +1,72 @@
+{
+  "batch_id": "bvv_202608_01",
+  "schema_version": "1.0.0",
+  "as_of_month": "2026-08",
+  "is_backfill": false,
+  "partition_source_column": "ngay_duyet",
+  "record_count": 2935,
+  "count_new": 935,
+  "count_used": 2000,
+  "source_rows_before_filter": 7365,
+  "source_file": [
+    "DT_TRONG_KY_TH7_20261003.csv",
+    "DT_TRONG_KY_TH8_20261003.csv"
+  ],
+  "filter_sc_code": "070104",
+  "filter_veh_type_ref": "kế thừa từ donor (đã qua ref_veh_type_scope.csv)",
+  "filter_model_code_ref": "kế thừa từ donor (đã qua ref_model_code.csv)",
+  "si_aggregation": "last (báo cáo BSS mới nhất)",
+  "dedup_removed": 299,
+  "rows_outside_target_months": {
+    "2025-07": 8,
+    "2025-08": 9,
+    "2025-09": 13,
+    "2025-10": 15,
+    "2025-11": 15,
+    "2025-12": 17,
+    "2026-01": 22,
+    "2026-02": 19,
+    "2026-03": 26,
+    "2026-04": 44,
+    "2026-05": 19,
+    "2026-06": 208,
+    "2026-09": 17,
+    "2026-10": 3,
+    "2026-11": 1
+  },
+  "file_name": "business_vehicle_valuation_202608.csv",
+  "file_sha256": "de62560729ef691a8eec1c3e4cf4fdb1ac48f6070095e205c0cf5a162fc9d96d",
+  "encoding": "utf-8-sig",
+  "delimiter": ",",
+  "produced_by": "landing_producer_bss/extract_bss_valuation.py",
+  "produced_at": "2026-10-04T20:21:47+07:00",
+  "source_system": "BSS (báo cáo doanh thu trong kỳ)",
+  "column_source": {
+    "real_from_bss": {
+      "ma_nghiep_vu": "MA_NGHIEP_VU",
+      "gia_tri_dinh_gia": "SO_TIEN_BAO_HIEM",
+      "ngay_duyet": "NGAY_CAP",
+      "hieu_luc_tu": "HIEU_LUC_DAU",
+      "hieu_luc_den": "HIEU_LUC_CUOI",
+      "ma_dinh_gia": "sha256(HOP_DONG‖MA_CN‖MA_NGHIEP_VU)[:16]",
+      "ky_bao_cao": "= as_of_month"
+    },
+    "assumed": [
+      "nhom_xe",
+      "hang_xe",
+      "ma_dong_xe",
+      "ma_kieu_dang",
+      "so_cho_ngoi",
+      "nam_san_xuat"
+    ],
+    "derived": [
+      "loai_dinh_gia",
+      "don_vi_tinh",
+      "as_of_month"
+    ]
+  },
+  "is_vehicle_attributes_assumed": true,
+  "imputation_method": "hot-deck theo giá: donor = landing 2025-01..2026-06, giá trong ±10% (tối thiểu 20 donor gần nhất), chọn tất định bằng sha256(HOP_DONG‖MA_CN); nam_san_xuat = năm(hieu_luc_tu) − tuổi xe donor",
+  "assumed_map_file": "bss_pol_map_assumed.csv",
+  "notes": "GIẢ ĐỊNH: thông tin xe không có trong BSS, được gán từ donor lịch sử. Không dùng các cột xe của lô này để kết luận phân tích."
+}

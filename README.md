@@ -97,7 +97,7 @@ Mỗi câu hỏi tương ứng với một bảng tại tầng Gold.
 | **Landing** | Vùng tiếp nhận (landing zone) chứa tệp bàn giao nguyên trạng. Không sửa, không xoá | Chỉ đọc (read-only) |
 | **Bronze** | Bản sao dữ liệu thô, lưu giữ **mọi** lần bàn giao (kể cả các lần gửi lại) | **Append**, theo batch |
 | **Silver** | Làm sạch, chuyển đổi kiểu (cast), quy đổi đơn vị sang triệu VND, lookup dimension, tách quarantine | **Overwrite** (full refresh) |
-| **Gold** | Tổng hợp dữ liệu theo câu hỏi nghiệp vụ. **Không làm sạch thêm** | **Overwrite** (full refresh) |
+| **Gold** | Tổng hợp dữ liệu theo câu hỏi nghiệp vụ. **Không làm sạch thêm** | **Overwrite** (full refresh); riêng `mart_ml_training` là **bản chụp** theo (phiên bản ref, mốc chia) |
 
 ---
 
@@ -174,7 +174,7 @@ Một số quyết định mô hình hoá:
 | Surrogate key = `xxhash64(natural key)` | Tính tất định (deterministic): khi re-run hoặc bổ sung mã mới, khoá cũ không thay đổi |
 | `nam_san_xuat`, `so_cho_ngoi`, `loai_dinh_gia` đặt trực tiếp trong fact | Không có thuộc tính mô tả đi kèm; tách thành dimension riêng chỉ làm tăng số phép join |
 | Mã xe không giải mã được → quarantine, không dùng record "Unknown" | Fact chỉ chứa các record trả lời được câu hỏi về hãng/dòng xe. Khi bổ sung reference data và re-run, record tự động được đưa về fact |
-| Không áp dụng SCD (dimension được ghi đè) | Bảng tham chiếu gần như tĩnh; ưu tiên tính đơn giản |
+| Không áp dụng SCD (dimension được ghi đè) | Bảng tham chiếu gần như tĩnh; ưu tiên tính đơn giản. Kết quả cũ vẫn tái tạo được nhờ **phiên bản ref** tại landing ([mục 5.4](#54-phiên-bản-reference-data-và-bản-chụp-mart_ml_training)) |
 | Quy đổi đơn vị VND → triệu VND tại Silver | Bảo đảm một đơn vị đo lường thống nhất từ tầng Silver trở đi |
 
 ### Gold
@@ -184,15 +184,16 @@ Một số quyết định mô hình hoá:
 | `mart_vehicle_price` | (hãng, dòng xe, năm sản xuất, số chỗ) |
 | `mart_monthly_trend` | (tháng duyệt, hãng, mục đích sử dụng, mới/cũ) |
 | `mart_data_quality` | Tháng (`as_of_month`) |
-| `mart_ml_training` | 1 hợp đồng, cùng grain với fact, **không** GROUP BY |
+| `mart_ml_training` | 1 hợp đồng, cùng grain với fact, **không** GROUP BY. Lưu tại `ref_version=…/train_end_month=…/` |
 
-### Control
+### Control và reference data
 
 | Tệp | Vai trò |
 |---|---|
 | `data/control/loaded_batches.csv` | Sổ batch (batch log) ghi nhận các batch đã ingest, ngăn ingest trùng lặp |
-| `data/landing/reference/ref_model_map.csv` | Mã dòng xe → hãng, dòng xe (nguồn của `dim_model`) |
-| `data/landing/reference/ref_veh_type_scope.csv` | Mã loại xe → mô tả, có thuộc phạm vi hay không (nguồn của `dim_vehicle_type`) |
+| `data/control/run_log.csv` | Sổ các lần chạy (append-only): phiên bản ref + sha256, mốc chia, số dòng fact/quarantine/train/test |
+| `data/landing/reference/ref_model_map/version=YYYY-MM/` | Mã dòng xe → hãng, dòng xe (nguồn của `dim_model`). Mỗi phiên bản + `_manifest.json` |
+| `data/landing/reference/ref_veh_type_scope/version=YYYY-MM/` | Mã loại xe → mô tả, có thuộc phạm vi hay không (nguồn của `dim_vehicle_type`) |
 
 ---
 
@@ -230,8 +231,9 @@ Mỗi record lỗi chỉ mang **một** `rule_id`: rule đầu tiên mà record 
 Sau bước phân tách, tầng Silver **tự động đối soát** (reconciliation) `fact + quarantine = Bronze
 active`. Nếu đẳng thức không thoả mãn, job dừng trước khi ghi kết quả.
 
-Record bị loại do mã xe không xác định có thể được **khôi phục** (recovery): bổ sung mã vào
-`ref_model_map.csv` rồi re-run Silver. Không cần sửa code, cũng không cần bên cung cấp gửi lại batch.
+Record bị loại do mã xe không xác định có thể được **khôi phục** (recovery): bàn giao **phiên bản
+mới** của `ref_model_map` có bổ sung mã rồi re-run. Không cần sửa code, cũng không cần bên cung cấp gửi
+lại batch (xem [mục 5.4](#54-phiên-bản-reference-data-và-bản-chụp-mart_ml_training)).
 
 Điều kiện chi tiết của từng rule: [docs/DATA_CONTRACT.md](docs/DATA_CONTRACT.md) §6 và §7.
 
@@ -253,11 +255,26 @@ lại và bảng cũ được giữ nguyên.
 | 8 | `loai_dinh_gia` | string | Feature: `new` / `used` (thuộc tính suy diễn) | fact |
 | 9 | `thang_duyet` | string `YYYY-MM` | Feature thời gian | `dim_date` |
 | 10 | `gia_tri_trieu_vnd` | double | **Biến mục tiêu** (target), đơn vị triệu VND | fact |
-| 11 | `split` | string | `train` nếu `thang_duyet ≤ 2026-03`, ngược lại `test` | So sánh `thang_duyet` với mốc chia |
+| 11 | `split` | string | `train` nếu `thang_duyet ≤` mốc chia (mặc định `2026-03`, đổi bằng `--train-end-month`), ngược lại `test` | So sánh `thang_duyet` với mốc chia |
 
 Bảng không chứa feature tổng hợp (aggregate feature, ví dụ giá trung vị theo dòng xe), vì khi được
 tính trên toàn bộ dữ liệu, các feature này sẽ làm rò rỉ thông tin giá của tập test vào tập train.
 Việc huấn luyện mô hình nằm ngoài phạm vi đề tài.
+
+### 5.4 Phiên bản reference data và bản chụp `mart_ml_training`
+
+Silver ghi đè mỗi lần chạy, nên khi `ref_model_map` đổi, fact và bảng ML của **mọi tháng cũ** được
+dựng lại theo ref mới. Để vẫn biết kết quả nào tính với ref nào:
+
+| Thành phần | Cách làm |
+|---|---|
+| **Phiên bản ref ở landing** | Mỗi bản là thư mục bất biến `version=YYYY-MM/` + manifest (sha256, số dòng, ghi chú thay đổi). Sửa ref = bàn giao phiên bản mới, không ghi đè. Không lưu ở Silver: `dim_model` dựng lại được từ ref |
+| **Chọn phiên bản** | Mặc định bản mới nhất cho mọi tháng (restate). `--ref-version 2026-06` → bản mới nhất có version ≤ 2026-06, để tái tạo kết quả cũ. Ref lệch manifest → job dừng |
+| **Dấu vết** | `silver/_run_info.json` (Silver dựng từ ref nào, batch nào) và `data/control/run_log.csv` (mỗi lần chạy một dòng, không ghi đè) |
+| **Bản chụp ML** | `gold/mart_ml_training/ref_version=…/train_end_month=…/` + `_run_info.json`. Khác (ref, mốc chia) → giữ song song |
+
+Không làm "mỗi tháng dùng ref của tháng đó" (point-in-time) — đó là SCD2, nằm ngoài phạm vi. Chi tiết
+và số đo: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) §4.2.
 
 ---
 
@@ -268,19 +285,21 @@ gia_tri_xe_oto/
 ├── data/
 │   ├── landing/                    # IMMUTABLE, được quản lý trong git
 │   │   ├── business_vehicle_valuation/as_of_month=YYYY-MM/{*.csv, _manifest.json}
-│   │   └── reference/{ref_model_map.csv, ref_veh_type_scope.csv}
+│   │   └── reference/<ref_name>/version=YYYY-MM/{<ref_name>.csv, _manifest.json}
 │   ├── bronze/  silver/  gold/     # sinh ra khi chạy (git-ignore)
-│   └── control/loaded_batches.csv  # sổ batch đã ingest (git-ignore)
+│   └── control/{loaded_batches.csv, run_log.csv}  # sổ batch + sổ lần chạy (git-ignore)
 ├── src/
 │   ├── config.py                   # đường dẫn + hằng số dùng chung
 │   ├── spark.py                    # khởi tạo SparkSession
 │   ├── validate.py                 # batch-level validation (Python thuần, không cần Spark)
+│   ├── reference.py                # chọn + kiểm phiên bản reference data
 │   ├── bronze.py                   # Landing → Bronze
 │   ├── silver.py                   # Bronze → Silver (star schema + quarantine)
 │   ├── gold.py                     # Silver → Gold (Spark SQL + contract)
-│   └── run_pipeline.py             # điều phối (orchestrate) cả 3 tầng
+│   ├── run_pipeline.py             # điều phối (orchestrate) cả 3 tầng
+│   └── report.py                   # số liệu + biểu đồ cho báo cáo → report/
 ├── notebook/                       # 4 notebook minh hoạ từng tầng (ghi vào _sandbox/)
-├── tests/                          # 19 test pytest
+├── tests/                          # 28 test pytest
 ├── docs/DATA_CONTRACT.md           # data contract của tệp bàn giao: 16 cột, manifest, rule kiểm tra
 ├── output/                         # bản CSV của 4 bảng Gold, mở được bằng Excel
 └── requirements.txt
@@ -296,7 +315,7 @@ gia_tri_xe_oto/
 - Trên Windows: bổ sung `HADOOP_HOME` (xem bên dưới)
 
 ```bash
-pip install -r requirements.txt      # pyspark 3.5, pandas, pytest
+pip install -r requirements.txt      # pyspark 3.5, pandas, pytest, matplotlib
 ```
 
 <details>
@@ -325,11 +344,24 @@ Luôn **thực thi từ thư mục gốc của dự án** và chạy dưới d�
 ### Cách A: một lệnh duy nhất
 
 ```bash
-python -m src.run_pipeline      # Landing → Bronze → Silver → Gold, khoảng 1 phút
+python -m src.run_pipeline                            # Landing → Bronze → Silver → Gold, khoảng 1 phút
+python -m src.run_pipeline --ref-version 2026-06      # tái tạo kết quả với ref ≤ 2026-06
+python -m src.run_pipeline --train-end-month 2026-05  # bản chụp ML với mốc chia khác
 ```
 
 Mã thoát (exit code) 0 nghĩa là thành công. Exit code 1 nghĩa là có batch bị reject, song Silver và
-Gold vẫn được thực thi với các batch đã ingest.
+Gold vẫn được thực thi với các batch đã ingest. Mỗi lần chạy thành công thêm một dòng vào
+`data/control/run_log.csv`.
+
+### Số liệu và biểu đồ cho báo cáo
+
+```bash
+python -m src.report            # → report/SO_LIEU.md + report/figures/hinh_05..09.png, khoảng 2 phút
+```
+
+Chạy sau `run_pipeline`. Script dựng lại Silver/Gold trong bộ nhớ cho từng phiên bản ref và kiểm khớp
+với Silver trên đĩa, nên số trong báo cáo luôn khớp code. Hai phạm vi số liệu: **(A)** toàn bộ lô với ref
+mới nhất (số kỹ thuật) và **(B)** chỉ các lô có thông tin xe thật với ref đầu tiên (kết luận về giá xe).
 
 ### Cách B: từng tầng
 

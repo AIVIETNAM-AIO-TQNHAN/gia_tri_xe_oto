@@ -1,0 +1,13 @@
+{
+  "ref_name": "ref_veh_type_scope",
+  "version": "2026-06",
+  "file_name": "ref_veh_type_scope.csv",
+  "file_sha256": "709f4101b488dba511edbbbe0cfdde80bffe2bc2040e500055a71c9126da93c8",
+  "row_count": 42,
+  "encoding": "utf-8-sig",
+  "delimiter": ",",
+  "change_note": "Bản đầu: danh mục loại xe + cờ trong_pham_vi",
+  "based_on": null,
+  "produced_by": "landing_producer_bss/build_ref_versions.py",
+  "produced_at": "2026-10-04T20:35:49+07:00"
+}

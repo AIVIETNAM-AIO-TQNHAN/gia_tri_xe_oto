@@ -19,6 +19,7 @@ bao nhiêu lần cũng cho cùng một kết quả — idempotent mà không c�
 Chạy:  python -m src.silver
 """
 import csv
+import json
 import logging
 import sys
 from pathlib import Path
@@ -27,9 +28,10 @@ from pyspark.sql import Column, DataFrame, SparkSession, Window
 from pyspark.sql import functions as F
 from pyspark.sql.types import StringType, StructField, StructType
 
+from src import reference
 from src.config import (BRONZE_DIR, MAX_APPROVAL_GAP_DAYS, PARTITION_COL, PRICE_VND_MAX,
-                        PRICE_VND_MIN, REF_MODEL_MAP, REF_VEH_TYPE, SEATS_MAX, SEATS_MIN,
-                        SILVER_DIR, YEAR_MIN)
+                        PRICE_VND_MIN, REF_MODEL_MAP_NAME, REF_VEH_TYPE_NAME, RUN_INFO_FILE,
+                        SEATS_MAX, SEATS_MIN, SILVER_DIR, YEAR_MIN)
 
 log = logging.getLogger("silver")
 
@@ -247,13 +249,23 @@ def transform(bronze: DataFrame, dim_model: DataFrame,
 
 # ---- Thực thi -----------------------------------------------------------------------------
 def run(spark: SparkSession, bronze_dir: Path = BRONZE_DIR, silver_dir: Path = SILVER_DIR,
-        ref_model_map: Path = REF_MODEL_MAP, ref_veh_type: Path = REF_VEH_TYPE) -> dict[str, int]:
+        ref_model_map: Path | None = None, ref_veh_type: Path | None = None,
+        ref_as_of: str | None = None) -> dict:
+    """ref_model_map / ref_veh_type: đường dẫn CSV cụ thể (sandbox, test). Bỏ trống -> chọn phiên bản
+    trong landing: mới nhất, hoặc mới nhất có version <= ref_as_of (src.reference)."""
     if not bronze_dir.exists():
         raise FileNotFoundError(f"Chưa có Bronze ở {bronze_dir} — chạy python -m src.bronze trước")
 
+    refs = {
+        REF_MODEL_MAP_NAME: reference.inspect(ref_model_map or reference.resolve(REF_MODEL_MAP_NAME, ref_as_of)),
+        REF_VEH_TYPE_NAME: reference.inspect(ref_veh_type or reference.resolve(REF_VEH_TYPE_NAME, ref_as_of)),
+    }
+    for r in refs.values():
+        log.info("Ref: %-20s version=%s · %d record · sha256 %s…", r.name, r.version, r.row_count, r.sha256[:12])
+
     bronze = active_bronze(spark.read.parquet(bronze_dir.as_posix())).cache()
-    dim_model = build_dim_model(read_ref_csv(spark, ref_model_map)).cache()
-    dim_vehicle_type = build_dim_vehicle_type(read_ref_csv(spark, ref_veh_type)).cache()
+    dim_model = build_dim_model(read_ref_csv(spark, refs[REF_MODEL_MAP_NAME].path)).cache()
+    dim_vehicle_type = build_dim_vehicle_type(read_ref_csv(spark, refs[REF_VEH_TYPE_NAME].path)).cache()
 
     fact, quarantine = transform(bronze, dim_model, dim_vehicle_type)
     fact, quarantine = fact.cache(), quarantine.cache()
@@ -278,13 +290,20 @@ def run(spark: SparkSession, bronze_dir: Path = BRONZE_DIR, silver_dir: Path = S
     write(fact, "fact_valuation", partitioned=True)
     write(quarantine, "quarantine", partitioned=True)
 
+    # Silver ghi đè toàn bộ -> phải ghi lại ĐÃ DỰNG TỪ ĐÂU, nếu không lần chạy sau xoá mất dấu vết.
+    # Gold đọc file này để gắn nhãn bản chụp mart_ml_training theo đúng phiên bản ref Silver đã dùng.
+    batches = sorted(r._batch_id for r in bronze.select("_batch_id").distinct().collect())
+    counts = {"bronze": n_bronze, "fact": n_fact, "quarantine": n_quar}
+    run_info = {"refs": {k: r.as_dict() for k, r in refs.items()}, "active_batches": batches, "counts": counts}
+    (silver_dir / RUN_INFO_FILE).write_text(json.dumps(run_info, ensure_ascii=False, indent=2), encoding="utf-8")
+
     log.info("Silver: bronze active %d = fact %d + quarantine %d (%.2f%%)",
              n_bronze, n_fact, n_quar, 100 * n_quar / max(n_bronze, 1))
     for row in quarantine.groupBy("rule_id").count().orderBy(F.desc("count")).collect():
         log.info("        %-20s %6d", row.rule_id, row["count"])
     log.info("        dim_model %d · dim_vehicle_type %d · dim_date %d",
              dim_model.count(), dim_vehicle_type.count(), dim_date.count())
-    return {"bronze": n_bronze, "fact": n_fact, "quarantine": n_quar}
+    return {**counts, "ref_versions": {k: r.version for k, r in refs.items()}}
 
 
 def main() -> int:

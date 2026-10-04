@@ -6,9 +6,9 @@ DATA = ROOT / "data"
 
 # ---- Landing zone: tệp bàn giao, IMMUTABLE ---------------------------------------
 LANDING_DIR = DATA / "landing" / "business_vehicle_valuation"      # as_of_month=YYYY-MM/
-REF_DIR = DATA / "landing" / "reference"                           # reference data
-REF_MODEL_MAP = REF_DIR / "ref_model_map.csv"                      # ma_dong_xe -> hãng, dòng xe
-REF_VEH_TYPE = REF_DIR / "ref_veh_type_scope.csv"                  # nhom_xe -> mô tả
+REF_DIR = DATA / "landing" / "reference"                           # <ref_name>/version=YYYY-MM/
+REF_MODEL_MAP_NAME = "ref_model_map"                               # ma_dong_xe -> hãng, dòng xe
+REF_VEH_TYPE_NAME = "ref_veh_type_scope"                           # nhom_xe -> mô tả
 
 # ---- Bronze: dữ liệu thô, append-only --------------------------------------------
 BRONZE_DIR = DATA / "bronze" / "business_valuation"
@@ -21,6 +21,9 @@ GOLD_DIR = DATA / "gold"
 
 # ---- Control: sổ batch (batch log) đã ingest, ngăn ingest trùng lặp --------------
 LOADED_BATCHES = DATA / "control" / "loaded_batches.csv"
+# ---- Control: sổ các lần chạy — phiên bản ref + tham số + kết quả, append-only ------
+RUN_LOG = DATA / "control" / "run_log.csv"
+RUN_INFO_FILE = "_run_info.json"  # ghi cạnh output Silver và mỗi bản chụp mart_ml_training
 
 PARTITION_COL = "as_of_month"
 

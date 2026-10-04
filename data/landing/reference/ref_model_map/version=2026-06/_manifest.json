@@ -1,0 +1,13 @@
+{
+  "ref_name": "ref_model_map",
+  "version": "2026-06",
+  "file_name": "ref_model_map.csv",
+  "file_sha256": "77caeb2fff27ebb464e1fdca0a8c9f520628aab889e1b4228b6c0b7edc352663",
+  "row_count": 1426,
+  "encoding": "utf-8-sig",
+  "delimiter": ",",
+  "change_note": "Bản đầu: đợt duyệt 1 (87 mã dòng xe), dùng cho 18 lô 2025-01 → 2026-06",
+  "based_on": null,
+  "produced_by": "landing_producer_bss/build_ref_versions.py",
+  "produced_at": "2026-10-04T20:35:49+07:00"
+}

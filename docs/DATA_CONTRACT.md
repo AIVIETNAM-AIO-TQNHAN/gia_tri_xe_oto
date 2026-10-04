@@ -186,10 +186,26 @@ kết quả được tính lại từ Bronze active. Tính chất này cho phép
 với hai phương thức khôi phục tương ứng:
 
 - **Lỗi thuộc dữ liệu tham chiếu (reference data) hoặc định nghĩa rule** (điển hình là
-  `MODEL_CODE_UNKNOWN` do `ref_model_map.csv` chưa đầy đủ): sau khi bổ sung reference data hoặc điều
-  chỉnh rule, việc re-run tầng Silver là đủ để các record thoả mãn điều kiện được **tự động chuyển về
-  fact table**, mà không cần can thiệp thủ công trên từng record hay yêu cầu bên cung cấp gửi lại
-  batch.
+  `MODEL_CODE_UNKNOWN` do `ref_model_map` chưa đầy đủ): sau khi bàn giao **phiên bản mới** của reference
+  data hoặc điều chỉnh rule, việc re-run tầng Silver là đủ để các record thoả mãn điều kiện được **tự
+  động chuyển về fact table**, mà không cần can thiệp thủ công trên từng record hay yêu cầu bên cung
+  cấp gửi lại batch.
+
+### 7.3a Bàn giao reference data
+
+Reference data tuân theo cùng nguyên tắc bất biến như batch (§2): mỗi phiên bản là một thư mục
+`data/landing/reference/<ref_name>/version=YYYY-MM/` gồm tệp `<ref_name>.csv` và `_manifest.json`.
+
+| Field manifest | Ý nghĩa |
+|---|---|
+| `ref_name`, `version` | Tên bảng và phiên bản `YYYY-MM` |
+| `file_name`, `file_sha256`, `row_count` | Tệp dữ liệu, SHA-256 và số record — pipeline kiểm lại trước khi dùng |
+| `encoding`, `delimiter` | `utf-8-sig`, `,` |
+| `change_note`, `based_on` | Thay đổi so với phiên bản trước (bổ sung / sửa / xoá mã) |
+
+Phiên bản đã bàn giao **không được sửa**. Tệp lệch SHA-256 hoặc số record so với manifest → job Silver
+dừng. Sửa hoặc bổ sung mã = bàn giao phiên bản mới. Thư mục chưa có manifest được coi là bàn giao dở
+dang và bị bỏ qua.
 - **Lỗi thuộc bản thân dữ liệu nguồn** (source data — giá trị định giá bằng `0`, ngày không hợp
   lệ…): chỉ có thể được khắc phục từ phía bên cung cấp, thông qua một batch mới mang `batch_id` mới
   (§2).
@@ -216,6 +232,7 @@ job **dừng ngay (fail fast) và không ghi kết quả**, nhằm ngăn một t
 
 | Hạn chế | Hệ quả |
 |---|---|
-| `ref_model_map` mới bao phủ ~52% số mã và ~90% số record | 9,76% record rơi vào `MODEL_CODE_UNKNOWN`. Có thể khôi phục bằng cách bổ sung reference data rồi re-run |
+| `ref_model_map` 2026-06 mới bao phủ ~52% số mã và ~90% số record | 9,76% record rơi vào `MODEL_CODE_UNKNOWN`. Phiên bản 2026-07 (đợt duyệt 2, **duyệt giả định theo luật**, chưa được nghiệp vụ xác nhận) đưa 2.744 record về fact trên 20 lô |
+| Lô 2026-07, 2026-08 dựng từ báo cáo doanh thu BSS | Thông tin xe (`nhom_xe`, `ma_dong_xe`, `nam_san_xuat`, `so_cho_ngoi`…) là **giả định** — gán từ hợp đồng lịch sử có giá gần nhất (manifest: `is_vehicle_attributes_assumed`). Không dùng hai lô này để kết luận về giá theo dòng xe |
 | Thiếu thông tin hộp số, kiểu dáng (coverage 7,79%) và số km đã đi | Giá nghiệp vụ là một giá trị duy nhất cho mỗi dòng xe/đời xe, không phân biệt phiên bản số sàn/tự động hay mức độ sử dụng của xe |
 | Bên cung cấp đã loại bỏ 189 record có mã xe không tồn tại trong bảng giá tham khảo | Pipeline không quan sát được các record này |

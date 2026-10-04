@@ -13,16 +13,23 @@ Bốn data mart:
     mart_data_quality    mỗi tháng: bao nhiêu record vào fact, bao nhiêu vào quarantine, do vi phạm rule nào
     mart_ml_training     feature table cho mô hình ML: grain 1 record = 1 hợp đồng, KHÔNG tổng hợp (README §5.3)
 
+Ba mart phân tích được ghi đè mỗi lần chạy. mart_ml_training thì KHÔNG: mỗi cặp (phiên bản ref, mốc chia)
+là một BẢN CHỤP riêng, để mô hình đã huấn luyện luôn tìm lại được đúng tập dữ liệu của nó:
+
+    gold/mart_ml_training/ref_version=2026-07/train_end_month=2026-03/part-*.parquet + _run_info.json
+
 Chạy:  python -m src.gold
 """
+import json
 import logging
+import re
 import sys
 from pathlib import Path
 
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F
 
-from src.config import GOLD_DIR, ML_TRAIN_END_MONTH, ROOT, SILVER_DIR
+from src.config import GOLD_DIR, ML_TRAIN_END_MONTH, REF_MODEL_MAP_NAME, ROOT, RUN_INFO_FILE, SILVER_DIR
 from src.silver import RULES
 
 log = logging.getLogger("gold")
@@ -162,21 +169,41 @@ def register_silver(spark: SparkSession, silver_dir: Path) -> None:
         spark.read.parquet(path.as_posix()).createOrReplaceTempView(name)
 
 
+def read_silver_run_info(silver_dir: Path) -> dict:
+    """_run_info.json do silver.run ghi: Silver hiện tại được dựng từ phiên bản ref nào, batch nào.
+    Silver cũ (trước khi có file này) -> refs rỗng, bản chụp ML mang nhãn 'unknown'."""
+    path = silver_dir / RUN_INFO_FILE
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"refs": {}}
+
+
+def ml_snapshot_dir(gold_dir: Path, ref_version: str, train_end_month: str) -> Path:
+    return gold_dir / "mart_ml_training" / f"ref_version={ref_version}" / f"train_end_month={train_end_month}"
+
+
 def run(spark: SparkSession, silver_dir: Path = SILVER_DIR, gold_dir: Path = GOLD_DIR,
-        csv_dir: Path | None = ROOT / "output") -> dict[str, int]:
+        csv_dir: Path | None = ROOT / "output", train_end_month: str = ML_TRAIN_END_MONTH) -> dict:
+    if not re.fullmatch(r"\d{4}-(0[1-9]|1[0-2])", train_end_month):
+        raise ValueError(f"train_end_month phải có dạng YYYY-MM, nhận được {train_end_month!r}")
     register_silver(spark, silver_dir)
+    silver_info = read_silver_run_info(silver_dir)
+    ref_version = silver_info["refs"].get(REF_MODEL_MAP_NAME, {}).get("version", "unknown")
+    snapshot = ml_snapshot_dir(gold_dir, ref_version, train_end_month)
+
     marts: dict[str, DataFrame] = {
         "mart_vehicle_price": spark.sql(MART_VEHICLE_PRICE),
         "mart_monthly_trend": spark.sql(MART_MONTHLY_TREND),
         "mart_data_quality": spark.sql(mart_data_quality_sql()),
-        "mart_ml_training": spark.sql(mart_ml_training_sql()),
+        "mart_ml_training": spark.sql(mart_ml_training_sql(train_end_month)),
     }
-    counts = {}
+    counts: dict = {}
     for name, df in marts.items():
         df = df.coalesce(1).cache()
         if name == "mart_ml_training":
             check_ml_contract(df)                 # kiểm tra contract TRƯỚC khi ghi
-        df.write.mode("overwrite").parquet((gold_dir / name).as_posix())
+            # Ghi đè CHỈ bản chụp cùng (ref, mốc chia) — chạy lại vẫn idempotent; bản chụp khác giữ nguyên
+            df.write.mode("overwrite").parquet(snapshot.as_posix())
+        else:
+            df.write.mode("overwrite").parquet((gold_dir / name).as_posix())
         counts[name] = df.count()
         if csv_dir is not None:                   # bản CSV để mở bằng Excel khi viết báo cáo
             csv_dir.mkdir(parents=True, exist_ok=True)
@@ -184,8 +211,16 @@ def run(spark: SparkSession, silver_dir: Path = SILVER_DIR, gold_dir: Path = GOL
         log.info("Gold: %-20s %6d record", name, counts[name])
         if name == "mart_ml_training":
             by_split = {r.split: r["count"] for r in df.groupBy("split").count().collect()}
-            log.info("      %-20s train %d · test %d (mốc chia %s)", "", by_split.get("train", 0),
-                     by_split.get("test", 0), ML_TRAIN_END_MONTH)
+            counts["ml_train"], counts["ml_test"] = by_split.get("train", 0), by_split.get("test", 0)
+            log.info("      %-20s train %d · test %d (mốc chia %s)", "", counts["ml_train"],
+                     counts["ml_test"], train_end_month)
+            # Thẻ của bản chụp: dựng từ ref nào, batch nào, mốc chia nào — đọc được mà không cần Spark
+            (snapshot / RUN_INFO_FILE).write_text(json.dumps(
+                {**silver_info, "train_end_month": train_end_month,
+                 "ml_rows": {"total": counts[name], "train": counts["ml_train"], "test": counts["ml_test"]}},
+                ensure_ascii=False, indent=2), encoding="utf-8")
+            log.info("      %-20s bản chụp: %s", "", snapshot.relative_to(gold_dir).as_posix())
+    counts["ml_snapshot"] = snapshot.relative_to(gold_dir).as_posix()
     return counts
 
 
