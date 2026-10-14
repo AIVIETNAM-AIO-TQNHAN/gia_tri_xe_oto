@@ -286,8 +286,8 @@ gia_tri_xe_oto/
 │   ├── landing/                    # IMMUTABLE, được quản lý trong git
 │   │   ├── business_vehicle_valuation/as_of_month=YYYY-MM/{*.csv, _manifest.json}
 │   │   └── reference/<ref_name>/version=YYYY-MM/{<ref_name>.csv, _manifest.json}
-│   ├── bronze/  silver/  gold/     # sinh ra khi chạy (git-ignore)
-│   └── control/{loaded_batches.csv, run_log.csv}  # sổ batch + sổ lần chạy (git-ignore)
+│   ├── bronze/  silver/  gold/     # sinh ra khi chạy (có trong git: kết quả lần chạy gần nhất)
+│   └── control/{loaded_batches.csv, run_log.csv}  # sổ batch + sổ lần chạy (có trong git)
 ├── src/
 │   ├── config.py                   # đường dẫn + hằng số dùng chung
 │   ├── spark.py                    # khởi tạo SparkSession

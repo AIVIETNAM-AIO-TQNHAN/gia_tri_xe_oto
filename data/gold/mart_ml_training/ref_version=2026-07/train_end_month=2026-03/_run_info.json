@@ -1,0 +1,51 @@
+{
+  "refs": {
+    "ref_model_map": {
+      "name": "ref_model_map",
+      "version": "2026-07",
+      "path": "D:/NhanTran/NhanFiris/AIO_TOPIC/Topic/gia_tri_xe_oto/data/landing/reference/ref_model_map/version=2026-07/ref_model_map.csv",
+      "sha256": "777979e4299e2b871bcd0b4dd30e65b0c625f177689a499dedfe4205878b14eb",
+      "row_count": 2167
+    },
+    "ref_veh_type_scope": {
+      "name": "ref_veh_type_scope",
+      "version": "2026-06",
+      "path": "D:/NhanTran/NhanFiris/AIO_TOPIC/Topic/gia_tri_xe_oto/data/landing/reference/ref_veh_type_scope/version=2026-06/ref_veh_type_scope.csv",
+      "sha256": "709f4101b488dba511edbbbe0cfdde80bffe2bc2040e500055a71c9126da93c8",
+      "row_count": 42
+    }
+  },
+  "active_batches": [
+    "bvv_202606_01",
+    "bvv_202607_01",
+    "bvv_202608_01",
+    "bvv_backfill_202501_01",
+    "bvv_backfill_202502_01",
+    "bvv_backfill_202503_01",
+    "bvv_backfill_202504_01",
+    "bvv_backfill_202505_01",
+    "bvv_backfill_202506_01",
+    "bvv_backfill_202507_01",
+    "bvv_backfill_202508_01",
+    "bvv_backfill_202509_01",
+    "bvv_backfill_202510_01",
+    "bvv_backfill_202511_01",
+    "bvv_backfill_202512_01",
+    "bvv_backfill_202601_01",
+    "bvv_backfill_202602_01",
+    "bvv_backfill_202603_01",
+    "bvv_backfill_202604_01",
+    "bvv_backfill_202605_01"
+  ],
+  "counts": {
+    "bronze": 59421,
+    "fact": 53064,
+    "quarantine": 6357
+  },
+  "train_end_month": "2026-03",
+  "ml_rows": {
+    "total": 53064,
+    "train": 38357,
+    "test": 14707
+  }
+}

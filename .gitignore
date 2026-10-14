@@ -1,8 +1,4 @@
-# Dữ liệu sinh ra khi chạy pipeline — dựng lại được từ landing
-data/bronze/
-data/silver/
-data/gold/
-data/control/
+# Dữ liệu nháp khi chạy thử — không đưa lên repo
 notebook/_sandbox/
 spark-warehouse/
 
